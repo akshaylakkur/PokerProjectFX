@@ -1,11 +1,10 @@
 package com.example;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Player{
     private int cardsRecieved = 2;
     private String name;
-    private Set<Card> cards = new TreeSet<Card>();
+    private TreeSet<Card> cards = new TreeSet<Card>();
     private int currentBet;
     private boolean folded;
     private boolean allIn;
@@ -106,7 +105,7 @@ public class Player{
         folded = true;
     }
 
-    public Set<Card> getPlayerCards(){
+    public TreeSet<Card> getPlayerCards(){
         return cards;
     }
     public void reset() {
