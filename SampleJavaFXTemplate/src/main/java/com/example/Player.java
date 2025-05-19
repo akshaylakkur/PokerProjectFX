@@ -1,10 +1,12 @@
 package com.example;
 import java.util.*;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Player{
     private int cardsRecieved = 2;
     private String name;
-    private TreeSet<Card> cards = new TreeSet<Card>();
+    private Set<Card> cards = new TreeSet<Card>();
     private int currentBet;
     private boolean folded;
     private boolean allIn;
@@ -44,7 +46,6 @@ public class Player{
         }
     }
 
-
     public void raise(int raiseAmount, int highestBet) {
         int toCall = highestBet - currentBet;
         int totalAmount = toCall + raiseAmount;
@@ -59,7 +60,6 @@ public class Player{
         }
     }
 
-    
     public void bet(int amount) {
         if (amount >= money) {
             currentBet += money;
@@ -83,17 +83,33 @@ public class Player{
         }
     }
 
-
+    public void fold(){
+        folded = true;
+        money -= currentBet;
+        currentBet = 0;
+    }
 
     public boolean canCheck(int highestBet) {
         return currentBet == highestBet;
     }
 
+    public int getMoney(){
+        return money;
+    }
+    
     public int getBet(){
         return currentBet;
     }
 
-    public boolean isfolded(){
+    public boolean isBetOverBalance(int bet){
+        return (bet - money > 0);
+    }
+
+    public boolean isBankrupt(){
+        return !(money > 0);
+    }
+
+    public boolean isFolded(){
         return folded;
     }
 
@@ -101,18 +117,26 @@ public class Player{
         return allIn;
     }
 
-    public void fold(){
-        folded = true;
+    public boolean isDealer(){
+        return dealer;
+    }
+    
+    public boolean isSmallBlind(){
+        return smallBlind;
     }
 
-    public TreeSet<Card> getPlayerCards(){
+    public boolean isBigBlind(){
+        return bigBlind;
+    }
+
+    public Set<Card> getPlayerCards(){
         return cards;
     }
+
     public void reset() {
         cards.clear();
         folded = false;
         allIn = false;
         currentBet = 0;
     }
-
 }
