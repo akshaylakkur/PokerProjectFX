@@ -16,8 +16,25 @@ public class WinningScenario{
     }
 
     public String getScenario(){
-        return "Blank";
+        TreeSet<Card> allCards = new TreeSet<Card>();
+        Iterator<Card> x = communityCards.iterator();
+
+        while (x.hasNext()){
+            Card c = x.next();
+            allCards.add(c);
+        }
+
+        Iterator<Card> y = player.getPlayerCards().iterator();
+
+        while (y.hasNext()){
+            Card l = y.next();
+            allCards.add(l);
+        }
+
+        return "hi";
     }
+
+
     
 
 
