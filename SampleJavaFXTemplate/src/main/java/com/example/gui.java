@@ -24,7 +24,7 @@ public class gui extends Application {
     public void start(Stage primaryStage) {
         //poker image start screen
         this.primaryStage = primaryStage;
-        ImageView enter_screen = enterScreen("/Users/akshaylakkur/PokerProjectFX/SampleJavaFXTemplate/src/main/java/com/example/images/poker.jpg");
+        ImageView enter_screen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/poker.jpg");
         //second layout
         StackPane stackpane = enterButton(enter_screen);
 
@@ -38,7 +38,15 @@ public class gui extends Application {
         primaryStage.show();
 
     }
-    public void style(Button button, String color){
+    public void imHandler(ImageView menuScreen){
+        menuScreen.setPreserveRatio(true);
+        menuScreen.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            double x = event.getX();
+            double y = event.getY();
+            System.out.printf("Clicked at: (%.2f, %.2f)%n", x, y);
+        });
+    }
+    public void style(Button button, String color, Pos position){
         button.setFont(Font.font("Verdana", 30));
         button.setStyle(
             "-fx-background-color:" + color + "#2E8B57;" +  // background color
@@ -46,45 +54,38 @@ public class gui extends Application {
             "-fx-padding: 10 20;" +             // top-bottom, left-right padding
             "-fx-background-radius: 10;"        // rounded corners
         );
+        StackPane.setAlignment(button, position);
     }
     private ImageView enterScreen(String fileName){
         Image enter = new Image("file:"+fileName);
         ImageView enter_screen = new ImageView(enter);
         return enter_screen;
     }
+    
     private StackPane enterButton(ImageView enter_screen){
-        Button enter_game = new Button("Enter Game");
-        style(enter_game,"green");
-        enter_game.setOnAction(e -> {
-            ImageView menuScreen = enterScreen("/Users/akshaylakkur/PokerProjectFX/SampleJavaFXTemplate/src/main/java/com/example/images/MenuScreen.jpg");
-            menuScreen.setPreserveRatio(true);
-            menuScreen.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                double x = event.getX();
-                double y = event.getY();
-                System.out.printf("Clicked at: (%.2f, %.2f)%n", x, y);
-            });
-            Button back_home = new Button("Back");
-            Button rules = new Button("Rules");
-            rules.setLayoutX(895.00);
-            rules.setLayoutY(578.50);
-            Pane rulesPane = new Pane();
-            rulesPane.getChildren().add(rules);
-            style(back_home, "purple");
-            StackPane.setAlignment(back_home,Pos.BOTTOM_LEFT);
-            StackPane l2 = new StackPane();
-            rulesPane.setMouseTransparent(true);
-            back_home.setMouseTransparent(true);
-            l2.getChildren().addAll(menuScreen, rulesPane, back_home);
-            menuPage = l2;
-            primaryStage.getScene().setRoot(l2);
-            back_home.setOnAction(ev -> {
-                primaryStage.getScene().setRoot(vbox);
-            });
-        });
-        StackPane.setAlignment(enter_game,Pos.BOTTOM_CENTER);
-        StackPane stackpane = new StackPane();
-        stackpane.getChildren().addAll(enter_screen, enter_game);
+        Button enterButton = new Button("Enter Game");
+        enterButton(enterButton);
+        StackPane stackpane = new StackPane(enter_screen, enterButton);
         return stackpane;
+    
+    }
+
+    public void enterButton(Button enterButton){
+        style(enterButton, "green", Pos.BOTTOM_CENTER);
+        enterButton.setOnAction(e -> {
+            ImageView menuScreen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/MenuScreen.jpg");
+            imHandler(menuScreen);
+            Button backToHomeButton = new Button("Back to Home");
+            BackHomeButton(backToHomeButton);
+            menuPage = new StackPane(menuScreen, backToHomeButton);
+            primaryStage.getScene().setRoot(menuPage);
+        });
+    }
+    public void BackHomeButton(Button backToHomeButton){
+        style(backToHomeButton, "red", Pos.BOTTOM_LEFT);
+        backToHomeButton.setOnAction(ex -> {
+            primaryStage.getScene().setRoot(vbox);
+        });
     }
 
     public static void main(String[] args) {
