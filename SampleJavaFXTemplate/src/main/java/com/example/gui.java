@@ -1,6 +1,9 @@
 package com.example;
+import java.util.Stack;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,6 +23,7 @@ public class gui extends Application {
     private Stage primaryStage;
     private Pane menuPage;
     private TextField playerName;
+    private Image menuScreen;
     @Override
     public void start(Stage primaryStage) {
         //poker image start screen
@@ -46,7 +50,7 @@ public class gui extends Application {
             System.out.printf("Clicked at: (%.2f, %.2f)%n", x, y);
         });
     }
-    public void style(Button button, String color, Pos position){
+    public void style(Button button, String color, Pos position, int size){
         button.setFont(Font.font("Verdana", 30));
         button.setStyle(
             "-fx-background-color:" + color + "#2E8B57;" +  // background color
@@ -56,8 +60,20 @@ public class gui extends Application {
         );
         StackPane.setAlignment(button, position);
     }
+    public void absoluteStyle(Button button, String color, double x, double y, int size){
+        button.setFont(Font.font("Verdana", size=size));
+        button.setStyle(
+            "-fx-background-color:" + color + "#2E8B57;" +  // background color
+            "-fx-text-fill: white;" +           // text color         // font size
+            "-fx-padding: 10 20;" +             // top-bottom, left-right padding
+            "-fx-background-radius: 10;"        // rounded corners
+        );
+        button.setLayoutX(x);
+        button.setLayoutY(y);
+    }
     private ImageView enterScreen(String fileName){
         Image enter = new Image("file:"+fileName);
+        menuScreen = enter;
         ImageView enter_screen = new ImageView(enter);
         return enter_screen;
     }
@@ -71,23 +87,45 @@ public class gui extends Application {
     }
 
     public void enterButton(Button enterButton){
-        style(enterButton, "green", Pos.BOTTOM_CENTER);
+        style(enterButton, "green", Pos.BOTTOM_CENTER, 30);
         enterButton.setOnAction(e -> {
             ImageView menuScreen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/MenuScreen.jpg");
             imHandler(menuScreen);
             Button backToHomeButton = new Button("Back to Home");
-            BackHomeButton(backToHomeButton);
-            menuPage = new StackPane(menuScreen, backToHomeButton);
+            BackHomeButton(backToHomeButton, vbox);
+            Button rulesButton = new Button("Rules");
+            Pane rulesPane = rulesButton(rulesButton);
+            menuPage = new StackPane(menuScreen, backToHomeButton, rulesPane);
             primaryStage.getScene().setRoot(menuPage);
         });
     }
-    public void BackHomeButton(Button backToHomeButton){
-        style(backToHomeButton, "red", Pos.BOTTOM_LEFT);
+    public void BackHomeButton(Button backToHomeButton, Object back){
+        style(backToHomeButton, "black", Pos.BOTTOM_LEFT, 30);
         backToHomeButton.setOnAction(ex -> {
-            primaryStage.getScene().setRoot(vbox);
+            primaryStage.getScene().setRoot((Parent) back);
         });
     }
 
+    public Pane rulesButton(Button rulesButton){
+        absoluteStyle(rulesButton, "red", 800, 500, 30);
+        rulesButton.setPrefWidth(209);
+        rulesButton.setPrefHeight(65);
+        rulesButton.setOnAction(er -> {
+            ImageView rulesScreen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/poker_rules.jpg");
+            imHandler(rulesScreen);
+            Button backToMenuButton = new Button("Back to Menu");
+            backToMenuButton.setOnAction(ex -> {
+
+            });
+
+            StackPane rulesPage = new StackPane(rulesScreen);
+            primaryStage.getScene().setRoot(rulesPage);
+        });
+        Pane rulesPane = new Pane();
+        rulesPane.getChildren().add(rulesButton);
+        rulesPane.setMouseTransparent(true);
+        return rulesPane;
+    }
     public static void main(String[] args) {
         launch(args);
     }
