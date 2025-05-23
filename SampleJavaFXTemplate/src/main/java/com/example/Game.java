@@ -17,6 +17,9 @@ public class Game {
 	private Player BBPlayer;
 	private Player dealer;    
 	private Player mc;  
+	private int highestBet;
+	private int lowestBet;    
+	private int x = (int) (rand.nextInt()*200 + 50);
 
 	public Game() {
 		Player cpu1 = new Player("cpu1", 1000);
@@ -27,6 +30,8 @@ public class Game {
 		players.put("cpu3", cpu3);
 		Scanner scan = new Scanner(System.in);
 		pot = 0;
+		highestBet = 0;
+		lowestBet = 0;
 	}
 
 	public void addPlayers(String name) {
@@ -123,8 +128,9 @@ public class Game {
 		assignSB();
 		assignBB();
 		System.out.println("Its time for the small blind and big blind to make the bets ");
-		if (!mc.isSmallBlind()){
-			
+		if (!mc.isSmallBlind() && !mc.isBigBlind()){   
+			BBPlayer.makeMove("bet",x,highestBet);
+			    
 		}
 
 	}
