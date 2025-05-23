@@ -100,10 +100,9 @@ public class gui extends Application {
             rulesPage = rulesButton(rulesButton);
             rulesPage.setPickOnBounds(false);
             Button quickPlayButton = new Button("Quick Play");
-            
-            
-            
-            menuPage = new StackPane(menuScreen, backToHomeButton, rulesPage);
+            AnchorPane quickPlayPage = quickPlay(quickPlayButton);
+            quickPlayPage.setPickOnBounds(false);
+            menuPage = new StackPane(menuScreen, backToHomeButton, rulesPage, quickPlayPage);
             primaryStage.getScene().setRoot(menuPage);
         });
     }
@@ -138,6 +137,24 @@ public class gui extends Application {
         rulesPane.getChildren().add(rulesButton);
         return rulesPane;
     }
+
+    public AnchorPane quickPlay(Button qb){
+        absoluteStyle(qb, "Blue", 314, 545, 20);
+        qb.setPrefWidth(168);
+        qb.setPrefHeight(65);
+        qb.setOnAction(e -> {
+            ImageView gScreen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/poker_table.jpg");
+            imHandler(gScreen);
+            Button backToMenuButton = new Button("Back to Menu");
+            BackHomeButton(backToMenuButton, menuPage);
+            StackPane gameScreen = new StackPane(gScreen, backToMenuButton);
+            primaryStage.getScene().setRoot(gameScreen);
+        });
+        AnchorPane gamePane = new AnchorPane();
+        gamePane.getChildren().add(qb);
+        return gamePane;
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
