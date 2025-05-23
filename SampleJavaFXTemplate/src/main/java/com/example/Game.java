@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 public class Game {
 
-	private HashMap<String, Player> players;
-	private HashMap<String, Integer> amount;
+	public HashMap<String, Player> players;
+	public HashMap<String, Integer> amount;
 	private int pot;
 	private Scanner scan;
 	private Random rand = new Random();
@@ -23,13 +23,17 @@ public class Game {
 	private int x = (int) (rand.nextInt()*200 + 50);
 
 	public Game() {
+		this.players = new HashMap<String, Player>();
+		this.amount = new HashMap<String, Integer>();
 		Player cpu1 = new Player("cpu1", 1000);
 		Player cpu2 = new Player("cpu2", 1000);
 		Player cpu3 = new Player("cpu3", 1000);
 		players.put("cpu1", cpu1);
 		players.put("cpu2", cpu2);
 		players.put("cpu3", cpu3);
-		Scanner scan = new Scanner(System.in);
+		amount.put("cpu1", 1000);
+		amount.put("cpu2", 1000);
+		amount.put("cpu3", 1000);
 		pot = 0;
 		highestBet = 0;
 		lowestBet = 0;

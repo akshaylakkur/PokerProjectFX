@@ -27,10 +27,12 @@ public class gui extends Application {
     private ImageView menuScreen;
     private ImageView rulesScreen;
     private AnchorPane rulesPage;
+    private Game game;
     @Override
     public void start(Stage primaryStage) {
         //poker image start screen
         this.primaryStage = primaryStage;
+        this.game = new Game();
         ImageView enter_screen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/poker.jpg");
         //second layout
         StackPane stackpane = enterButton(enter_screen);
@@ -74,6 +76,17 @@ public class gui extends Application {
         button.setLayoutX(x);
         button.setLayoutY(y);
     }
+    public void absoluteText(TextField t, String color, double x, double y, int size){
+        t.setFont(Font.font("Verdana", size=size));
+        t.setStyle(
+            "-fx-background-color:" + color + "#2E8B57;" +  // background color
+            "-fx-text-fill: white;" +           // text color         // font size
+            "-fx-padding: 10 20;" +             // top-bottom, left-right padding
+            "-fx-background-radius: 10;"        // rounded corners
+        );
+        t.setLayoutX(x);
+        t.setLayoutY(y);
+    }
     private ImageView enterScreen(String fileName){
         Image enter = new Image("file:"+fileName);
         ImageView enter_screen = new ImageView(enter);
@@ -105,8 +118,10 @@ public class gui extends Application {
             Button notAvailableButton = new Button("Not Available");
             AnchorPane notAvailablePage = NotAvailable(notAvailableButton);
             notAvailablePage.setPickOnBounds(false);
-
-            menuPage = new StackPane(menuScreen, backToHomeButton, rulesPage, quickPlayPage, notAvailablePage);
+            TextField playerName = new TextField("ENTER NAME");
+            AnchorPane namePage = pName(playerName);
+            namePage.setPickOnBounds(false);
+            menuPage = new StackPane(menuScreen, backToHomeButton, rulesPage, quickPlayPage, notAvailablePage, namePage);
             primaryStage.getScene().setRoot(menuPage);
         });
     }
@@ -168,6 +183,22 @@ public class gui extends Application {
         return notAvailablePane;
     }
 
+    public AnchorPane pName(TextField pn){
+        absoluteText(pn, "Black", 469, 475, 30);
+        pn.setPrefWidth(261);
+        pn.setPrefHeight(35);
+        pn.setOnAction(e -> {
+            String name = pn.getText();
+            pn.setText("Saved");
+            Player p = new Player(name, 1000);
+            game.players.put(name, p);
+            game.amount.put(name, 1000);
+            System.out.println("Player " + name + " has been added to the game with starting cash at $1000.");
+        });
+        AnchorPane namePane = new AnchorPane();
+        namePane.getChildren().add(pn);
+        return namePane;
+    }
     public static void main(String[] args) {
         launch(args);
     }
