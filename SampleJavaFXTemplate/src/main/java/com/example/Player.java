@@ -4,7 +4,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class Player{
-    private int cardsRecieved = 2;
     private String name;
     private TreeSet<Card> cards = new TreeSet<Card>();
     private int currentBet;
@@ -21,6 +20,12 @@ public class Player{
         allIn = false;
         currentBet = 0;
         this.money = money;       
+    }
+
+    public void addCard(Card card){
+        if (cards.size() <= 2){ //Each player gets 2 cards
+            cards.add(card);
+        }
     }
 
     public void makeMove(String move) {
