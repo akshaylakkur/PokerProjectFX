@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -23,7 +24,9 @@ public class gui extends Application {
     private Stage primaryStage;
     private Pane menuPage;
     private TextField playerName;
-    private Image menuScreen;
+    private ImageView menuScreen;
+    private ImageView rulesScreen;
+    private AnchorPane rulesPage;
     @Override
     public void start(Stage primaryStage) {
         //poker image start screen
@@ -32,8 +35,6 @@ public class gui extends Application {
         //second layout
         StackPane stackpane = enterButton(enter_screen);
 
-        
-        
         //launch the gui
         vbox = new VBox(10, stackpane);
         Scene scene = new Scene(vbox);
@@ -43,7 +44,9 @@ public class gui extends Application {
 
     }
     public void imHandler(ImageView menuScreen){
-        menuScreen.setPreserveRatio(true);
+        menuScreen.setPreserveRatio(false); // Allow stretching
+        menuScreen.setFitWidth(primaryStage.getWidth());
+        menuScreen.setFitHeight(primaryStage.getHeight());
         menuScreen.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             double x = event.getX();
             double y = event.getY();
@@ -73,7 +76,6 @@ public class gui extends Application {
     }
     private ImageView enterScreen(String fileName){
         Image enter = new Image("file:"+fileName);
-        menuScreen = enter;
         ImageView enter_screen = new ImageView(enter);
         return enter_screen;
     }
@@ -89,13 +91,19 @@ public class gui extends Application {
     public void enterButton(Button enterButton){
         style(enterButton, "green", Pos.BOTTOM_CENTER, 30);
         enterButton.setOnAction(e -> {
-            ImageView menuScreen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/MenuScreen.jpg");
-            imHandler(menuScreen);
+            ImageView mScreen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/MenuScreen.jpg");
+            imHandler(mScreen);
+            menuScreen = mScreen;
             Button backToHomeButton = new Button("Back to Home");
             BackHomeButton(backToHomeButton, vbox);
             Button rulesButton = new Button("Rules");
-            Pane rulesPane = rulesButton(rulesButton);
-            menuPage = new StackPane(menuScreen, backToHomeButton, rulesPane);
+            rulesPage = rulesButton(rulesButton);
+            rulesPage.setPickOnBounds(false);
+            Button quickPlayButton = new Button("Quick Play");
+            
+            
+            
+            menuPage = new StackPane(menuScreen, backToHomeButton, rulesPage);
             primaryStage.getScene().setRoot(menuPage);
         });
     }
@@ -104,26 +112,30 @@ public class gui extends Application {
         backToHomeButton.setOnAction(ex -> {
             primaryStage.getScene().setRoot((Parent) back);
         });
+
     }
 
-    public Pane rulesButton(Button rulesButton){
-        absoluteStyle(rulesButton, "red", 800, 500, 30);
-        rulesButton.setPrefWidth(209);
+    public AnchorPane rulesButton(Button rulesButton){
+        absoluteStyle(rulesButton, "red", 716, 545, 30);
+        rulesButton.setPrefWidth(166);
         rulesButton.setPrefHeight(65);
         rulesButton.setOnAction(er -> {
-            ImageView rulesScreen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/poker_rules.jpg");
-            imHandler(rulesScreen);
+            Image enter = new Image("file:"+"/Users/akshaylakkur/PokerProjectFX/SampleJavaFXTemplate/src/main/java/com/example/images/poker_rules.jpg");
+            if (enter.isError()) {
+                System.out.println("Image failed to load: " + enter.getException());
+                return;
+            }
+            ImageView rScreen = new ImageView(enter);
+            imHandler(rScreen);
+            rulesScreen = rScreen;
             Button backToMenuButton = new Button("Back to Menu");
-            backToMenuButton.setOnAction(ex -> {
-
-            });
-
-            StackPane rulesPage = new StackPane(rulesScreen);
-            primaryStage.getScene().setRoot(rulesPage);
+            BackHomeButton(backToMenuButton, menuPage);
+            StackPane rp = new StackPane(rulesScreen, backToMenuButton);
+            primaryStage.getScene().setRoot(rp);
+            // rp.setPickOnBounds(false);
         });
-        Pane rulesPane = new Pane();
+        AnchorPane rulesPane = new AnchorPane();
         rulesPane.getChildren().add(rulesButton);
-        rulesPane.setMouseTransparent(true);
         return rulesPane;
     }
     public static void main(String[] args) {
