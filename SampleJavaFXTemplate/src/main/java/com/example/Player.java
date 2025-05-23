@@ -113,6 +113,10 @@ public class Player{
         return folded;
     }
 
+    public String getName(){
+        return name;
+    }
+
     public boolean isAllIn(){
         return allIn;
     }
