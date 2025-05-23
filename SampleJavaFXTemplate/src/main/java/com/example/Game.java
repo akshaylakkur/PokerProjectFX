@@ -3,6 +3,7 @@ package com.example;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -43,10 +44,6 @@ public class Game {
 		players.remove(name);
 		players.get(name).fold();
 		return amount.get(name);
-	}
-
-	public void updatePot() {
-
 	}
 
 	public void assignDealer() {
@@ -119,6 +116,19 @@ public class Game {
 
 	}
 
+  public void updatePot(){
+    pot = 0;
+    highestBet = 0;
+    for (String x : players.keySet()){
+      pot += players.get(x).getBet();
+      if (players.get(x).getBet() > highestBet){
+        highestBet = players.get(x).getBet();
+      }
+    }
+
+    System.out.println("The pot has been updated, HighestBet: " + highestBet + "Pot: " + pot);
+  }
+
 	public void executeGame() {
 		System.out.println("Welcome to Poker! Please enter your name:");
 		String name = scan.nextLine();
@@ -129,9 +139,33 @@ public class Game {
 		assignBB();
 		System.out.println("Its time for the small blind and big blind to make the bets ");
 		if (!mc.isSmallBlind() && !mc.isBigBlind()){   
-			BBPlayer.makeMove("bet",x,highestBet);
-			    
-		}
+			SBPlayer.makeMove("bet",x,highestBet);
+      System.out.println("The small blind has made bet of $" + SBPlayer.getBet());
+      updatePot();
+      BBPlayer.makeMove("bet", highestBet * 2, highestBet);
+      System.out.println("The big blind has made bet of $" + SBPlayer.getBet());
+      updatePot();
+		} else if (mc.isSmallBlind()){
+      System.out.println("Enter your SB bet:");
+      int num = scan.nextInt();
+      mc.makeMove("bet", num, highestBet);
+      System.out.println("The small blind has made bet of $" + SBPlayer.getBet());
+      updatePot();
+      BBPlayer.makeMove("bet", highestBet * 2, highestBet);
+      System.out.println("The big blind has made bet of $" + SBPlayer.getBet());
+      updatePot();
+    } else if (mc.isBigBlind()){
+      SBPlayer.makeMove("bet",x,highestBet);
+      System.out.println("The small blind has made bet of $" + SBPlayer.getBet());
+      updatePot();
+      System.out.println("Enter your BB bet (it should be higher than SB's bet):");
+      int num2 = scan.nextInt();
+      mc.makeMove("bet", num2, highestBet);
+      System.out.println("The big blind has made bet of $" + SBPlayer.getBet());
+      updatePot();
+    }
+    System.out.println("Now the small and big blinds have made the bets lets do it for others");
+    
 
 	}
 
