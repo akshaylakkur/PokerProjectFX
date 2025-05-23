@@ -2,6 +2,7 @@ package com.example;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Game{
@@ -10,6 +11,8 @@ public class Game{
   private HashMap<String, Integer> amount;
   private int pot;
   private Scanner scan;
+  private Random rand = new Random();
+
     
   public Game(){
     Player cpu1 = new Player("cpu1", 1000);
@@ -37,18 +40,79 @@ public class Game{
   
   }
 
+  public void assignDealer(){
+    int z = ((int) rand.nextInt()*(players.keySet().size()-1)) + 1;
+    String key = "";
+    int count = 0;
+    for (String x : players.keySet()){
+      if (count > z){
+        break;
+      }
+      key = x;
+      count++;
+    }         
 
-  public void executeGame(){
+    Player d = players.get(key);
+    
+    if (!d.isBigBlind() && !d.isSmallBlind()){
+      d.setDealer();
+    } else {
+      assignDealer();
+    }
+  }
+
+  public void assignBB(){
+    int z = ((int) rand.nextInt()*(players.keySet().size()-1)) + 1;
+    String key = "";
+    int count = 0;
+    for (String x : players.keySet()){
+      if (count > z){
+        break;
+      }
+      key = x;
+      count++;
+    }         
+
+    Player d = players.get(key);
+    
+    if (!d.isDealer() && !d.isSmallBlind()){
+      d.setBB();
+    } else {
+      assignBB();
+    }
+  }
+
+  public void assignSB(){
+    int z = ((int) rand.nextInt()*(players.keySet().size()-1)) + 1;
+    String key = "";
+    int count = 0;
+    for (String x : players.keySet()){
+      if (count > z){
+        break;
+      }
+      key = x;
+      count++;
+    }         
+
+    Player d = players.get(key);
+    
+    if (!d.isDealer() && !d.isBigBlind()){
+      d.setSB();
+    } else {
+      assignSB();
+    }
+        
+  }
+
+    public void executeGame(){
     System.out.println("Welcome to Poker! Please enter your name:");
     String name = scan.nextLine();
     addPlayers(name);
-    players.get("cpu2");
+    players.get("cpu2");   
 
 
   }
-
-
-
+                
 
 
 }

@@ -20,14 +20,14 @@ public class WinningScenario{
 
     ArrayList<Card> cardList = new ArrayList<Card>(allCards);
 
-    // descending sort cuz its easier 
+    // descending sort cuz its easier   
     for (int i = 0; i < cardList.size() - 1; i++) {
         for (int j = i + 1; j < cardList.size(); j++) {
             if (cardList.get(j).getRank() > cardList.get(i).getRank()) {
                 Card temp = cardList.get(i);
                 cardList.set(i, cardList.get(j));
-                cardList.set(j, temp);
-            }
+                cardList.set(j, temp); 
+            }    
         }
     }
 

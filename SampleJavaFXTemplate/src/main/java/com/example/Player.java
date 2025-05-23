@@ -133,6 +133,18 @@ public class Player{
         return cards;
     }
 
+    public void setBB(){
+        bigBlind = true;
+    }
+
+    public void setSB(){
+        smallBlind = true;
+    }
+
+    public void setDealer(){
+        dealer = true;
+    }
+
     public void reset() {
         cards.clear();
         folded = false;
