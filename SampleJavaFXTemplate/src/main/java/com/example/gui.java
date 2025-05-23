@@ -102,7 +102,11 @@ public class gui extends Application {
             Button quickPlayButton = new Button("Quick Play");
             AnchorPane quickPlayPage = quickPlay(quickPlayButton);
             quickPlayPage.setPickOnBounds(false);
-            menuPage = new StackPane(menuScreen, backToHomeButton, rulesPage, quickPlayPage);
+            Button notAvailableButton = new Button("Not Available");
+            AnchorPane notAvailablePage = NotAvailable(notAvailableButton);
+            notAvailablePage.setPickOnBounds(false);
+
+            menuPage = new StackPane(menuScreen, backToHomeButton, rulesPage, quickPlayPage, notAvailablePage);
             primaryStage.getScene().setRoot(menuPage);
         });
     }
@@ -153,6 +157,15 @@ public class gui extends Application {
         AnchorPane gamePane = new AnchorPane();
         gamePane.getChildren().add(qb);
         return gamePane;
+    }
+
+    public AnchorPane NotAvailable(Button na){
+        absoluteStyle(na, "red", 518, 545, 18);
+        na.setPrefWidth(166);
+        na.setPrefHeight(65);
+        AnchorPane notAvailablePane = new AnchorPane();
+        notAvailablePane.getChildren().add(na);
+        return notAvailablePane;
     }
 
     public static void main(String[] args) {
