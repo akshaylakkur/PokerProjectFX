@@ -11,16 +11,16 @@ public class Game {
 
 	public HashMap<String, Player> players;
 	public HashMap<String, Integer> amount;
-	private int pot;
-	private Scanner scan;
-	private Random rand = new Random();
-	private Player SBPlayer;
-	private Player BBPlayer;
-	private Player dealer;    
-	private Player mc;  
-	private int highestBet;
-	private int lowestBet;    
-	private int x = (int) (rand.nextInt()*200 + 50);
+	public int pot;
+	public Scanner scan;
+	public Random rand = new Random();
+	public Player SBPlayer;
+	public Player BBPlayer;
+	public Player dealer;    
+	public Player mc;  
+	public int highestBet;
+	public int lowestBet;    
+	public int x = (int) (rand.nextInt()*200 + 50);
 
 	public Game() {
 		this.players = new HashMap<String, Player>();
