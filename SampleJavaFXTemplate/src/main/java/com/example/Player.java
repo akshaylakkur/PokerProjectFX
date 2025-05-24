@@ -100,7 +100,12 @@ public class Player{
         if (canCheck(HighestBet)){
             System.out.println(name + "has decided to check");
         } else {
-            System.out.println("Name");   
+            System.out.println(name + "cant bet, must call or raise  ");  
+            Scanner scan = new Scanner(System.in); 
+            String m = scan.next();
+            System.out.println("enter amount");
+            int x = scan.nextInt(); 
+            makeMove(m,x ,HighestBet);
         }
     }
 
