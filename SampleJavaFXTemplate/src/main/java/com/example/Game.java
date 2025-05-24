@@ -120,18 +120,31 @@ public class Game {
 
 	}
 
-  public void updatePot(){
-    pot = 0;
-    highestBet = 0;
-    for (String x : players.keySet()){
-      pot += players.get(x).getBet();
-      if (players.get(x).getBet() > highestBet){
-        highestBet = players.get(x).getBet();
-      }
-    }
+	public void updatePot(){
+		pot = 0;
+		highestBet = 0;
+		for (String x : players.keySet()){
+			pot += players.get(x).getBet();
+			if (players.get(x).getBet() > highestBet){
+				highestBet = players.get(x).getBet();  
+			}
+		}
 
-    System.out.println("The pot has been updated, HighestBet: " + highestBet + "Pot: " + pot);
-  }
+		System.out.println("The pot has been updated, HighestBet: " + highestBet + "Pot: " + pot);
+	}
+
+
+    public String randBotMove(){
+		int x = rand.nextInt(9) + 1;
+
+		if (x == 1){
+			return "fold";
+		} else if (x >= 2 && x < 7){
+			return "raise";
+		} else {
+			return "call";
+		}
+	}
 
 	public void executeGame() {
 		System.out.println("Welcome to Poker! Please enter your name:");

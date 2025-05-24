@@ -28,16 +28,6 @@ public class Player{
         }
     }
 
-    public void makeMove(String move) {
-        move = move.toLowerCase();
-        if (move.equals("allin")) {
-            currentBet += money;
-            money = 0;
-            allIn = true;
-        } else if (move.equals("fold")) {
-            fold();
-        }
-    }
     public void makeMove(String move, int amt, int currentHighestBet) {
         move = move.toLowerCase();
         if (move.equals("bet")) {
@@ -46,8 +36,14 @@ public class Player{
             call(currentHighestBet);
         } else if (move.equals("raise")) {
             raise(amt, currentHighestBet);
-        }  else if (move.equals("check")) {
+        } else if (move.equals("check")) {
             canCheck(currentHighestBet);
+        } else if (move.equals("allin")) {
+            currentBet += money;
+            money = 0;
+            allIn = true;
+        } else if (move.equals("fold")) {
+            fold();
         }
     }
 
@@ -92,11 +88,22 @@ public class Player{
         folded = true;
         money -= currentBet;
         currentBet = 0;
+        System.out.println(name + "has folded from the game");  
     }
+
 
     public boolean canCheck(int highestBet) {
         return currentBet == highestBet;
     }
+
+    public void check(int HighestBet){
+        if (canCheck(HighestBet)){
+            System.out.println(name + "has decided to check");
+        } else {
+            System.out.println("Name");   
+        }
+    }
+
 
     public int getMoney(){
         return money;
