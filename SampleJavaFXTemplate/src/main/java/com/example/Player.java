@@ -58,7 +58,10 @@ public class Player{
         } else {
             money -= totalAmount;
             currentBet += totalAmount;
+
         }
+
+        System.out.println(name + " has raised th highest ammount to $" + currentBet);  
     }
 
     public void bet(int amount) {
@@ -82,6 +85,8 @@ public class Player{
             money -= toCall;
             currentBet += toCall;
         }
+
+        System.out.println(name + " has called $" + toCall + " to match the highest bet");   
     }
 
     public void fold(){
@@ -104,8 +109,9 @@ public class Player{
             Scanner scan = new Scanner(System.in); 
             String m = scan.next();
             System.out.println("enter amount");
-            int x = scan.nextInt(); 
+            int x = scan.nextInt();      
             makeMove(m,x ,HighestBet);
+            scan.close();
         }
     }
 
