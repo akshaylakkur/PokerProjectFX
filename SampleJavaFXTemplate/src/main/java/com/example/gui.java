@@ -134,7 +134,7 @@ public class gui extends Application {
     }
 
     public AnchorPane rulesButton(Button rulesButton){
-        absoluteStyle(rulesButton, "red", 716, 545, 30);
+        absoluteStyle(rulesButton, "Green", 716, 545, 30);
         rulesButton.setPrefWidth(166);
         rulesButton.setPrefHeight(65);
         rulesButton.setOnAction(er -> {
