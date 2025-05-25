@@ -3,7 +3,7 @@ import java.util.*;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Player{
+public class Player implements Comparable<Player>{
     private String name;
     private TreeSet<Card> cards = new TreeSet<Card>();
     private int currentBet;
@@ -177,5 +177,9 @@ public class Player{
         folded = false;
         allIn = false;
         currentBet = 0;
+    }
+
+    public int compareTo(Player other){
+        return this.getName().compareTo(other.getName());
     }
 }
