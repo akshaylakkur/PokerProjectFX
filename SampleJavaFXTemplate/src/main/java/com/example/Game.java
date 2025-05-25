@@ -1,5 +1,5 @@
 package com.example;
-
+import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +22,7 @@ public class Game {
 	public int lowestBet;    
 	public int randbet = (int) (rand.nextInt()*200 + 50);
 	public Deck deck = new Deck();
+	public TreeSet<Card> communityCards = new TreeSet<Card>();
 
 	public Game() {
 		this.players = new HashMap<String, Player>();
@@ -203,6 +204,12 @@ public class Game {
 			}     
 
 			System.out.println("Now it is time for the flop! Let the first 3 cards be dealt!");  
+			communityCards.add(deck.dealCard());
+			communityCards.add(deck.dealCard());
+			communityCards.add(deck.dealCard());
+
+			
+			
 		}
 
      
