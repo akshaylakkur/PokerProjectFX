@@ -3,7 +3,7 @@ import java.util.*;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Player{
+public class Player implements Comparable<Player>{
     private String name;
     private TreeSet<Card> cards = new TreeSet<Card>();
     private int currentBet;
@@ -28,16 +28,6 @@ public class Player{
         }
     }
 
-    public void makeMove(String move) {
-        move = move.toLowerCase();
-        if (move.equals("allin")) {
-            currentBet += money;
-            money = 0;
-            allIn = true;
-        } else if (move.equals("fold")) {
-            fold();
-        }
-    }
     public void makeMove(String move, int amt, int currentHighestBet) {
         move = move.toLowerCase();
         if (move.equals("bet")) {
@@ -46,8 +36,14 @@ public class Player{
             call(currentHighestBet);
         } else if (move.equals("raise")) {
             raise(amt, currentHighestBet);
-        }  else if (move.equals("check")) {
+        } else if (move.equals("check")) {
             canCheck(currentHighestBet);
+        } else if (move.equals("allin")) {
+            currentBet += money;
+            money = 0;
+            allIn = true;
+        } else if (move.equals("fold")) {
+            fold();
         }
     }
 
@@ -61,8 +57,11 @@ public class Player{
             allIn = true;
         } else {
             money -= totalAmount;
-            currentBet += totalAmount;
+            currentBet += totalAmount;    
+        
         }
+
+        System.out.println(name + " has raised th highest ammount to $" + currentBet);  
     }
 
     public void bet(int amount) {
@@ -86,17 +85,36 @@ public class Player{
             money -= toCall;
             currentBet += toCall;
         }
+
+        System.out.println(name + " has called $" + toCall + " to match the highest bet");   
     }
 
     public void fold(){
         folded = true;
         money -= currentBet;
         currentBet = 0;
+        System.out.println(name + "has folded from the game");  
     }
+
 
     public boolean canCheck(int highestBet) {
         return currentBet == highestBet;
     }
+
+    public void check(int HighestBet){
+        if (canCheck(HighestBet)){
+            System.out.println(name + "has decided to check");
+        } else {
+            System.out.println(name + "cant bet, must call or raise  ");  
+            Scanner scan = new Scanner(System.in); 
+            String m = scan.next();
+            System.out.println("enter amount");
+            int x = scan.nextInt();      
+            makeMove(m,x ,HighestBet);
+            scan.close();
+        }
+    }
+
 
     public int getMoney(){
         return money;
@@ -159,5 +177,9 @@ public class Player{
         folded = false;
         allIn = false;
         currentBet = 0;
+    }
+
+    public int compareTo(Player other){
+        return this.getName().compareTo(other.getName());
     }
 }
