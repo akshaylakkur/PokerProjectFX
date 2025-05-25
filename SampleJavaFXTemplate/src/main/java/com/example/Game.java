@@ -212,11 +212,19 @@ public class Game {
 			System.out.println("Time for #2 round betting "); 
 			for(String p : players.keySet()){
 				if (players.get(p).equals(players.get(playerN))){
-					System.out.println(players.get(playerN).getName() + "please enter your bet");
+					System.out.println(players.get(playerN).getName() + "please enter your move"); 
+					String secMove = scan.nextLine();
+					System.out.println(players.get(playerN).getName() + ", please enter your bet amount");
+					int bet2 = scan.nextInt();
+					players.get(playerN).makeMove(secMove, bet2, highestBet);
+					updatePot();
 				} else if (!players.get(p).equals(players.get(playerN))){     
-					
+					players.get(p).makeMove(randBotMove(), randbet, highestBet);
+					updatePot();
 				}
 			}
+
+			
 	
 		}
 
