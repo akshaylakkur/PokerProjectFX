@@ -205,13 +205,14 @@ public class Game {
 
 			System.out.println("Now it is time for the flop! Let the first 3 cards be dealt!");   
 			communityCards.add(deck.dealCard());
-			communityCards.add(deck.dealCard());
 			communityCards.add(deck.dealCard());  
-
+			communityCards.add(deck.dealCard());  
+        
 			System.out.println("Time for #2 round betting "); 
 			for(String p : players.keySet()){
 				if (players.get(p).equals(mc)){
-					
+				} else if (!players.get(p).equals(mc)){     
+
 				}
 			}
 	
