@@ -180,7 +180,6 @@ public class gui extends Application {
             messageBox.setPrefHeight(200);
             messageBox.setStyle("-fx-control-inner-background: black; -fx-text-fill: white;");
 
-
             // Redirect System.out to messageBox
             OutputStream out = new OutputStream() {
                 @Override
@@ -194,6 +193,11 @@ public class gui extends Application {
 
             Button backToMenuButton = new Button("Back to Menu");
             BackHomeButton(backToMenuButton, menuPage);
+
+            game.assignDealer();
+            
+
+
 
             VBox gameLayout = new VBox();
             gameLayout.getChildren().addAll(gScreen, messageBox, backToMenuButton);

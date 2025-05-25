@@ -1,11 +1,5 @@
 package com.example;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Scanner;
 
 public class Game {
 
@@ -53,27 +47,13 @@ public class Game {
 		return amount.get(name);
 	}
 
-	public void assignDealer() {
-		int z = ((int) rand.nextInt() * (players.keySet().size() - 1)) + 1;
-		String key = "";
-		int count = 0;
-		for (String x : players.keySet()) {
-			if (count > z) {
-				break;
-			}
-			key = x;
-			count++;
-		}
-
-		Player d = players.get(key);
-
-		if (!d.isBigBlind() && !d.isSmallBlind()) {
-			d.setDealer();
-			System.out.println("Player " + d.getName() + " is the dealer!");
-			dealer = d;
-		} else {
-			assignDealer();
-		}
+	public String assignDealer() {
+		int l = players.keySet().size();
+		Random rand = new Random();
+		int index = rand.nextInt(l);
+		String dealer = players.keySet().toArray(new String[0])[index];
+		System.out.println("Player " + dealer + " is the dealer!");
+		return dealer;
 	}
 
 	public void assignBB() {
