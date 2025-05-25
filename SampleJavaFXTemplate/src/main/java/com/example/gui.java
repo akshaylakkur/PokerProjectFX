@@ -1,22 +1,24 @@
 package com.example;
-import java.util.Stack;
+
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.scene.image.*;
-import javafx.scene.input.MouseEvent;
 
 public class gui extends Application {
 
@@ -28,25 +30,24 @@ public class gui extends Application {
     private ImageView rulesScreen;
     private AnchorPane rulesPage;
     private Game game;
+
     @Override
     public void start(Stage primaryStage) {
-        //poker image start screen
         this.primaryStage = primaryStage;
         this.game = new Game();
+
         ImageView enter_screen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/poker.jpg");
-        //second layout
         StackPane stackpane = enterButton(enter_screen);
 
-        //launch the gui
         vbox = new VBox(10, stackpane);
         Scene scene = new Scene(vbox);
         primaryStage.setTitle("Poker GUI");
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
+
     public void imHandler(ImageView menuScreen){
-        menuScreen.setPreserveRatio(false); // Allow stretching
+        menuScreen.setPreserveRatio(false);
         menuScreen.setFitWidth(primaryStage.getWidth());
         menuScreen.setFitHeight(primaryStage.getHeight());
         menuScreen.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -55,50 +56,51 @@ public class gui extends Application {
             System.out.printf("Clicked at: (%.2f, %.2f)%n", x, y);
         });
     }
+
     public void style(Button button, String color, Pos position, int size){
         button.setFont(Font.font("Verdana", 30));
         button.setStyle(
-            "-fx-background-color:" + color + "#2E8B57;" +  // background color
-            "-fx-text-fill: white;" +           // text color         // font size
-            "-fx-padding: 10 20;" +             // top-bottom, left-right padding
-            "-fx-background-radius: 10;"        // rounded corners
+            "-fx-background-color:" + color + "#2E8B57;" +
+            "-fx-text-fill: white;" +
+            "-fx-padding: 10 20;" +
+            "-fx-background-radius: 10;"
         );
         StackPane.setAlignment(button, position);
     }
+
     public void absoluteStyle(Button button, String color, double x, double y, int size){
-        button.setFont(Font.font("Verdana", size=size));
+        button.setFont(Font.font("Verdana", size));
         button.setStyle(
-            "-fx-background-color:" + color + "#2E8B57;" +  // background color
-            "-fx-text-fill: white;" +           // text color         // font size
-            "-fx-padding: 10 20;" +             // top-bottom, left-right padding
-            "-fx-background-radius: 10;"        // rounded corners
+            "-fx-background-color:" + color + "#2E8B57;" +
+            "-fx-text-fill: white;" +
+            "-fx-padding: 10 20;" +
+            "-fx-background-radius: 10;"
         );
         button.setLayoutX(x);
         button.setLayoutY(y);
     }
+
     public void absoluteText(TextField t, String color, double x, double y, int size){
-        t.setFont(Font.font("Verdana", size=size));
+        t.setFont(Font.font("Verdana", size));
         t.setStyle(
-            "-fx-background-color:" + color + "#2E8B57;" +  // background color
-            "-fx-text-fill: white;" +           // text color         // font size
-            "-fx-padding: 10 20;" +             // top-bottom, left-right padding
-            "-fx-background-radius: 10;"        // rounded corners
+            "-fx-background-color:" + color + "#2E8B57;" +
+            "-fx-text-fill: white;" +
+            "-fx-padding: 10 20;" +
+            "-fx-background-radius: 10;"
         );
         t.setLayoutX(x);
         t.setLayoutY(y);
     }
+
     private ImageView enterScreen(String fileName){
         Image enter = new Image("file:"+fileName);
-        ImageView enter_screen = new ImageView(enter);
-        return enter_screen;
+        return new ImageView(enter);
     }
-    
+
     private StackPane enterButton(ImageView enter_screen){
         Button enterButton = new Button("Enter Game");
         enterButton(enterButton);
-        StackPane stackpane = new StackPane(enter_screen, enterButton);
-        return stackpane;
-    
+        return new StackPane(enter_screen, enterButton);
     }
 
     public void enterButton(Button enterButton){
@@ -107,30 +109,36 @@ public class gui extends Application {
             ImageView mScreen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/MenuScreen.jpg");
             imHandler(mScreen);
             menuScreen = mScreen;
+
             Button backToHomeButton = new Button("Back to Home");
             BackHomeButton(backToHomeButton, vbox);
+
             Button rulesButton = new Button("Rules");
             rulesPage = rulesButton(rulesButton);
             rulesPage.setPickOnBounds(false);
+
             Button quickPlayButton = new Button("Quick Play");
             AnchorPane quickPlayPage = quickPlay(quickPlayButton);
             quickPlayPage.setPickOnBounds(false);
+
             Button notAvailableButton = new Button("Not Available");
             AnchorPane notAvailablePage = NotAvailable(notAvailableButton);
             notAvailablePage.setPickOnBounds(false);
+
             TextField playerName = new TextField("ENTER NAME");
             AnchorPane namePage = pName(playerName);
             namePage.setPickOnBounds(false);
+
             menuPage = new StackPane(menuScreen, backToHomeButton, rulesPage, quickPlayPage, notAvailablePage, namePage);
             primaryStage.getScene().setRoot(menuPage);
         });
     }
+
     public void BackHomeButton(Button backToHomeButton, Object back){
         style(backToHomeButton, "black", Pos.BOTTOM_LEFT, 30);
         backToHomeButton.setOnAction(ex -> {
             primaryStage.getScene().setRoot((Parent) back);
         });
-
     }
 
     public AnchorPane rulesButton(Button rulesButton){
@@ -150,7 +158,6 @@ public class gui extends Application {
             BackHomeButton(backToMenuButton, menuPage);
             StackPane rp = new StackPane(rulesScreen, backToMenuButton);
             primaryStage.getScene().setRoot(rp);
-            // rp.setPickOnBounds(false);
         });
         AnchorPane rulesPane = new AnchorPane();
         rulesPane.getChildren().add(rulesButton);
@@ -164,11 +171,41 @@ public class gui extends Application {
         qb.setOnAction(e -> {
             ImageView gScreen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/poker_table.jpg");
             imHandler(gScreen);
+
+            // Create chatbox / message area
+            TextArea messageBox = new TextArea();
+            messageBox.setEditable(false);
+            messageBox.setWrapText(true);
+            messageBox.setPrefWidth(300);
+            messageBox.setPrefHeight(200);
+            messageBox.setStyle("-fx-control-inner-background: black; -fx-text-fill: white;");
+
+
+            // Redirect System.out to messageBox
+            OutputStream out = new OutputStream() {
+                @Override
+                public void write(int b) {
+                    javafx.application.Platform.runLater(() -> {
+                        messageBox.appendText(String.valueOf((char) b));
+                    });
+                }
+            };
+            System.setOut(new PrintStream(out, true));
+
             Button backToMenuButton = new Button("Back to Menu");
             BackHomeButton(backToMenuButton, menuPage);
-            StackPane gameScreen = new StackPane(gScreen, backToMenuButton);
+
+            VBox gameLayout = new VBox();
+            gameLayout.getChildren().addAll(gScreen, messageBox, backToMenuButton);
+            VBox.setVgrow(messageBox, javafx.scene.layout.Priority.ALWAYS);
+            StackPane gameScreen = new StackPane(gameLayout);
+
             primaryStage.getScene().setRoot(gameScreen);
+
+            // Example output
+            System.out.println("Welcome to Quick Play!");
         });
+
         AnchorPane gamePane = new AnchorPane();
         gamePane.getChildren().add(qb);
         return gamePane;
@@ -199,6 +236,7 @@ public class gui extends Application {
         namePane.getChildren().add(pn);
         return namePane;
     }
+
     public static void main(String[] args) {
         launch(args);
     }
