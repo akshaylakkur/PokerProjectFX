@@ -57,8 +57,8 @@ public class Player{
             allIn = true;
         } else {
             money -= totalAmount;
-            currentBet += totalAmount;
-
+            currentBet += totalAmount;    
+        
         }
 
         System.out.println(name + " has raised th highest ammount to $" + currentBet);  
