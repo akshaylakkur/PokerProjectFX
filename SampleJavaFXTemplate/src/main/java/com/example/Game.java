@@ -17,6 +17,7 @@ public class Game {
 	public Deck deck = new Deck();
 	public TreeSet<Card> communityCards = new TreeSet<Card>();
 	public String playerN = "";
+	public WinningScenario evaluator;
 
 	public Game() {
 		this.players = new HashMap<String, Player>();
@@ -129,6 +130,14 @@ public class Game {
 		}
 	}
 
+
+	public void winner(){
+		for (String x : players.keySet()){
+			
+		}
+
+	}
+
 	public void executeGame() {
 		System.out.println("Welcome to Poker! Please enter your name:");
 		String name = scan.nextLine();
@@ -182,9 +191,11 @@ public class Game {
 				int am = scan.nextInt();
 				players.get(playerN).makeMove(move, am, highestBet);
 				updatePot();
-			}     
-
-			System.out.println("Now it is time for the flop! Let the first 3 cards be dealt!");   
+			}  
+		}
+		
+		
+		System.out.println("Now it is time for the flop! Let the first 3 cards be dealt!");   
 			communityCards.add(deck.dealCard());
 			communityCards.add(deck.dealCard());  
 			communityCards.add(deck.dealCard());  
@@ -231,7 +242,7 @@ public class Game {
 					System.out.println(players.get(playerN).getName() + "please enter your move"); 
 					String finalMove = scan.nextLine();
 					System.out.println(players.get(playerN).getName() + ", please enter your bet amount, it only matters if you choose to raise");
-					int bet4 = scan.nextInt();
+					int bet4 = scan.nextInt();      
 					players.get(playerN).makeMove(finalMove, bet4, highestBet);
 					updatePot();
 				} else if (!players.get(p3).equals(players.get(playerN)) && !players.get(p3).isAllIn() && !players.get(p3).isFolded()){     
@@ -240,19 +251,7 @@ public class Game {
 				}                        
 			}
 
-			
-			
-
-			
-
-
-
-
-	
-		}
-
-     
-
+			System.out.println("Now that everyone has made their final bets, lets compare hands to determine the winner!");
 	}
 
 }
