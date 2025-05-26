@@ -5,12 +5,12 @@ import java.util.*;
 public class Game {
 
 	public HashMap<String, Player> players;
-	public HashMap<String, Integer> amount;
+	public HashMap<String, Integer> amount;    
 	public int pot;
 	public Scanner scan;
 	public Random rand = new Random();
 	public Player SBPlayer;
-	public Player BBPlayer;
+	public Player BBPlayer;  
 	public Player dealer;
 	public int highestBet;
 	public int lowestBet;
@@ -153,10 +153,14 @@ public class Game {
 	public void resetGame() {
 		for (String x : players.keySet()) {
 			players.get(x).reset();
+			players.get(x).changeMoney(1000);
 		}
 		pot = 0;
 		highestBet = 0;
 		communityCards.clear();
+		dealer = null;
+		SBPlayer = null;
+		BBPlayer = null;
 	}
 
 	public void executeGame() {
@@ -165,6 +169,7 @@ public class Game {
 		String name = scan.nextLine();
 		addPlayers(name);
 		while (continueGame) {
+			resetGame();
 			System.out.println("Time to assign the dealer and blinds!!");
 			assignDealer();
 			assignSB();
