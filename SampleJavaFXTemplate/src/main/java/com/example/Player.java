@@ -172,6 +172,10 @@ public class Player implements Comparable<Player>{
         dealer = true;
     }
 
+    public void changeMoney(int m){
+        money += m;
+    }
+
     public void reset() {
         cards.clear();
         folded = false;

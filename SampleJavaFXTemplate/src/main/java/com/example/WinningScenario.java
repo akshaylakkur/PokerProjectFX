@@ -14,140 +14,129 @@ public class WinningScenario{
     } 
 
     public String getScenario() {
-    TreeSet<Card> allCards = new TreeSet<Card>();
-    allCards.addAll(communityCards);
-    allCards.addAll(playerCards);
+        TreeSet<Card> allCards = new TreeSet<Card>();
+        allCards.addAll(communityCards);
+        allCards.addAll(playerCards);
 
-    ArrayList<Card> cardList = new ArrayList<Card>(allCards);
+        ArrayList<Card> cardList = new ArrayList<Card>(allCards);
+        Collections.sort(cardList); // ascending
+        Collections.reverse(cardList); // descending
 
-    // descending sort cuz its easier   
-    for (int i = 0; i < cardList.size() - 1; i++) {
-        for (int j = i + 1; j < cardList.size(); j++) {
-            if (cardList.get(j).getRank() > cardList.get(i).getRank()) {
-                Card temp = cardList.get(i);
-                cardList.set(i, cardList.get(j));
-                cardList.set(j, temp); 
-            }    
-        }
-    }
+        Map<Integer, Integer> rankCounts = new HashMap<Integer, Integer>();
+        Map<String, ArrayList<Card>> suitMap = new HashMap<String, ArrayList<Card>>();
 
-    Map<Integer, Integer> rankCounts = new HashMap<Integer, Integer>(); // mapped by ranks number 
-    Map<String, ArrayList<Card>> suitMap = new HashMap<String, ArrayList<Card>>(); // mapped by suit (both of these are here to make it easier to compare )
+        for (int i = 0; i < cardList.size(); i++) {
+            Card card = cardList.get(i);
+            int rank = card.getRank();
+            String suit = card.getSuit();
 
-    for (int i = 0; i < cardList.size(); i++) {
-        Card card = cardList.get(i);
-        int rank = card.getRank();
-        String suit = card.getSuit();
+            if (rankCounts.containsKey(rank)) {
+                rankCounts.put(rank, rankCounts.get(rank) + 1);
+            } else {
+                rankCounts.put(rank, 1);
+            }
 
-        // Count ranks
-        if (rankCounts.containsKey(rank)) {
-            rankCounts.put(rank, rankCounts.get(rank) + 1);
-        } else {
-            rankCounts.put(rank, 1);
+            if (!suitMap.containsKey(suit)) {
+                suitMap.put(suit, new ArrayList<Card>());
+            }
+            suitMap.get(suit).add(card);
         }
 
-        // Group by suit
-        if (!suitMap.containsKey(suit)) {
-            suitMap.put(suit, new ArrayList<Card>());
+        ArrayList<Card> flushCards = null;
+        for (Iterator<String> it = suitMap.keySet().iterator(); it.hasNext();) {
+            String suit = it.next();
+            ArrayList<Card> suitedCards = suitMap.get(suit);
+            if (suitedCards.size() >= 5) {
+                flushCards = new ArrayList<Card>(suitedCards);
+                Collections.sort(flushCards);
+                Collections.reverse(flushCards);
+                break;
+            }
         }
-        suitMap.get(suit).add(card);
-    }
 
-    // Check for flush
-    ArrayList<Card> flushCards = null;
-    for (String suit : suitMap.keySet()) {
-        ArrayList<Card> suitedCards = suitMap.get(suit);
-        if (suitedCards.size() >= 5) {
-            flushCards = suitedCards;
-            break;
-        }
-    }
+        TreeSet<Integer> uniqueRanksSet = new TreeSet<Integer>(rankCounts.keySet());
+        ArrayList<Integer> uniqueRanks = new ArrayList<Integer>(uniqueRanksSet);
 
-    // Check for straight
-    TreeSet<Integer> uniqueRanksSet = new TreeSet<Integer>();
-    for (Integer r : rankCounts.keySet()) {
-        uniqueRanksSet.add(r);
-    }
-
-    List<Integer> uniqueRanks = new ArrayList<Integer>(uniqueRanksSet);
-
-    boolean isStraight = false;
-    int consecutive = 1;
-    for (int i = 1; i < uniqueRanks.size(); i++) {
-        if (uniqueRanks.get(i) - uniqueRanks.get(i - 1) == 1) {
-            consecutive++;
-            if (consecutive >= 5) {
+        boolean isStraight = false;
+        for (int i = 0; i <= uniqueRanks.size() - 5; i++) {
+            int r0 = uniqueRanks.get(i);
+            int r1 = uniqueRanks.get(i + 1);
+            int r2 = uniqueRanks.get(i + 2);
+            int r3 = uniqueRanks.get(i + 3);
+            int r4 = uniqueRanks.get(i + 4);
+            if (r1 - r0 == 1 && r2 - r1 == 1 && r3 - r2 == 1 && r4 - r3 == 1) {
                 isStraight = true;
                 break;
             }
-        } else {
-            consecutive = 1;
         }
-    }
-
-    // Special case: A-2-3-4-5
-    if (!isStraight && uniqueRanks.contains(14) && uniqueRanks.contains(2)
-            && uniqueRanks.contains(3) && uniqueRanks.contains(4) && uniqueRanks.contains(5)) {
-        isStraight = true;
-    }
-
-    // staright flusha nd royale flush check, (these are hella rare)
-    if (flushCards != null) {
-        TreeSet<Integer> flushRanksSet = new TreeSet<Integer>();
-        for (int i = 0; i < flushCards.size(); i++) {
-            flushRanksSet.add(flushCards.get(i).getRank());
+        if (!isStraight && uniqueRanks.contains(14) && uniqueRanks.contains(2)
+                && uniqueRanks.contains(3) && uniqueRanks.contains(4) && uniqueRanks.contains(5)) {
+            isStraight = true;
         }
-        List<Integer> flushRanks = new ArrayList<Integer>(flushRanksSet);
 
-        consecutive = 1;
-        for (int i = 1; i < flushRanks.size(); i++) {
-            if (flushRanks.get(i) - flushRanks.get(i - 1) == 1) {
-                consecutive++;
-                if (consecutive >= 5) {
-                    if (flushRanks.get(i) == 14) return "Royal Flush";
+        if (flushCards != null) {
+            ArrayList<Integer> flushRanks = new ArrayList<Integer>();
+            for (int i = 0; i < flushCards.size(); i++) {
+                flushRanks.add(flushCards.get(i).getRank());
+            }
+
+            Collections.sort(flushRanks);
+            Collections.reverse(flushRanks);
+
+            for (int i = 0; i <= flushRanks.size() - 5; i++) {
+                int r0 = flushRanks.get(i);
+                int r1 = flushRanks.get(i + 1);
+                int r2 = flushRanks.get(i + 2);
+                int r3 = flushRanks.get(i + 3);
+                int r4 = flushRanks.get(i + 4);
+                if (r1 - r0 == -1 && r2 - r1 == -1 && r3 - r2 == -1 && r4 - r3 == -1) {
+                    if (r0 == 14) return "Royal Flush";
                     return "Straight Flush";
                 }
-            } else {
-                consecutive = 1;
+            }
+
+            if (flushRanks.contains(14) && flushRanks.contains(2)
+                    && flushRanks.contains(3) && flushRanks.contains(4) && flushRanks.contains(5)) {
+                return "Straight Flush";
             }
         }
 
-        // Special straight flush case: A-2-3-4-5
-        if (flushRanks.contains(14) && flushRanks.contains(2)
-                && flushRanks.contains(3) && flushRanks.contains(4) && flushRanks.contains(5)) {
-            return "Straight Flush";
+        int four = 0, three = 0, pairs = 0;
+        for (Iterator<Integer> it = rankCounts.values().iterator(); it.hasNext();) {
+            int count = it.next();
+            if (count == 4) four++;
+            else if (count == 3) three++;
+            else if (count == 2) pairs++;
         }
+
+        if (four == 1) return "Four of a Kind";
+        if (three >= 1 && pairs >= 1) return "Full House";
+        if (flushCards != null) return "Flush";
+        if (isStraight) return "Straight";
+        if (three == 1) return "Three of a Kind";
+        if (pairs >= 2) return "Two Pair";
+        if (pairs == 1) return "One Pair";
+
+        return "High Card";
     }
 
-    // if all the big stuff doesnt work it counts to find the more likely small stuff
-    // this part is the most important the other stuff above are only for extreme cases
-    int four = 0, three = 0, pairs = 0;
-    for (Integer count : rankCounts.values()) {
-        if (count == 4) four++;
-        else if (count == 3) three++;
-        else if (count == 2) pairs++;
+
+    public Card getHighestCard() {
+        Card highest = null;
+        
+        for (Card card : playerCards) {
+            if (highest == null || card.compareTo(highest) > 0) {
+                highest = card;
+            }
+        }
+
+        for (Card card : communityCards) {
+            if (highest == null || card.compareTo(highest) > 0) {
+                highest = card;
+            }
+        }
+
+        return highest;
     }
 
-    if (four == 1) return "Four of a Kind";
-    if (three == 1 && pairs >= 1) return "Full House";
-    if (flushCards != null) return "Flush";
-    if (isStraight) return "Straight";
-    if (three == 1) return "Three of a Kind";
-    if (pairs >= 2) return "Two Pair";
-    if (pairs == 1) return "One Pair";
-
-    return "High Card";
 }
-
-
-    
-
-
-
-
-
-
-}
-
-
-
