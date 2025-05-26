@@ -3,6 +3,7 @@ package com.example;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -19,6 +20,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class gui extends Application {
 
@@ -30,6 +32,7 @@ public class gui extends Application {
     private ImageView rulesScreen;
     private AnchorPane rulesPage;
     private Game game;
+    private String name;
 
     @Override
     public void start(Stage primaryStage) {
@@ -194,13 +197,18 @@ public class gui extends Application {
             Button backToMenuButton = new Button("Back to Menu");
             BackHomeButton(backToMenuButton, menuPage);
 
+            Button fold = new Button("Fold");
+            AnchorPane foldPane = foldBtn(fold);
+
             StackPane backPane = new StackPane(backToMenuButton);
 
-            AnchorPane boxPane = new AnchorPane(gScreen, messageBox, backPane);
+            AnchorPane boxPane = new AnchorPane(gScreen, messageBox, backPane, foldPane);
             AnchorPane.setTopAnchor(messageBox, 10.0);
             AnchorPane.setRightAnchor(messageBox, 10.0);
             AnchorPane.setBottomAnchor(backPane, 10.0);
             AnchorPane.setLeftAnchor(backPane, 10.0);
+            AnchorPane.setBottomAnchor(foldPane, 10.0);
+            AnchorPane.setRightAnchor(foldPane, 10.0);
 
             
             primaryStage.getScene().setRoot(boxPane);    
@@ -228,7 +236,7 @@ public class gui extends Application {
         pn.setPrefWidth(261);
         pn.setPrefHeight(35);
         pn.setOnAction(e -> {
-            String name = pn.getText();
+            name = pn.getText();
             pn.setText("Saved");
             Player p = new Player(name, 1000);
             game.players.put(name, p);
@@ -240,6 +248,22 @@ public class gui extends Application {
         return namePane;
     }
 
+    public AnchorPane foldBtn(Button f){
+        style(f, "red", Pos.BOTTOM_CENTER, 30);
+        f.setOnAction(e -> {
+            game.players.get(name).fold();
+            game.players.remove(name);
+            game.resetGame();
+            PauseTransition delay = new PauseTransition(Duration.seconds(5));
+                delay.setOnFinished(event -> {
+                    primaryStage.getScene().setRoot(menuPage);
+        });
+        delay.play();
+        });
+        AnchorPane foldPane = new AnchorPane();
+        foldPane.getChildren().add(f);
+        return foldPane;
+    }
     public static void main(String[] args) {
         launch(args);
     }
