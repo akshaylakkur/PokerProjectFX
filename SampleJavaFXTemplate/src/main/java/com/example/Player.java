@@ -180,6 +180,10 @@ public class Player implements Comparable<Player>{
         cards.clear();
         folded = false;
         allIn = false;
+        dealer = false;
+        smallBlind = false;
+        bigBlind = false;
+        cards.clear();
         currentBet = 0;
     }
 
