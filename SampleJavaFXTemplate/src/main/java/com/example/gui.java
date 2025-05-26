@@ -194,17 +194,16 @@ public class gui extends Application {
             Button backToMenuButton = new Button("Back to Menu");
             BackHomeButton(backToMenuButton, menuPage);
 
-            game.assignDealer();
+            StackPane backPane = new StackPane(backToMenuButton);
+
+            AnchorPane boxPane = new AnchorPane(gScreen, messageBox, backPane);
+            AnchorPane.setTopAnchor(messageBox, 10.0);
+            AnchorPane.setRightAnchor(messageBox, 10.0);
+            AnchorPane.setBottomAnchor(backPane, 10.0);
+            AnchorPane.setLeftAnchor(backPane, 10.0);
+
             
-
-
-
-            VBox gameLayout = new VBox();
-            gameLayout.getChildren().addAll(gScreen, messageBox, backToMenuButton);
-            VBox.setVgrow(messageBox, javafx.scene.layout.Priority.ALWAYS);
-            StackPane gameScreen = new StackPane(gameLayout);
-
-            primaryStage.getScene().setRoot(gameScreen);
+            primaryStage.getScene().setRoot(boxPane);    
 
             // Example output
             System.out.println("Welcome to Quick Play!");
