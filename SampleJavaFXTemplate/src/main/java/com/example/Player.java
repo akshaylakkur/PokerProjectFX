@@ -93,7 +93,7 @@ public class Player implements Comparable<Player>{
         folded = true;
         money -= currentBet;
         currentBet = 0;
-        System.out.println(name + "has folded from the game");  
+        System.out.println(name + " has folded from the game");  
     }
 
 

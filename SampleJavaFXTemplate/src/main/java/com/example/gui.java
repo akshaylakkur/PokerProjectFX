@@ -33,11 +33,32 @@ public class gui extends Application {
     private AnchorPane rulesPage;
     private Game game;
     private String name;
+    private TextArea messageBox;
+    
 
     @Override
     public void start(Stage primaryStage) {
+        this.messageBox = new TextArea();
         this.primaryStage = primaryStage;
         this.game = new Game();
+
+        // Create chatbox / message area
+        messageBox.setEditable(false);
+        messageBox.setWrapText(true);
+        messageBox.setPrefWidth(300);
+        messageBox.setPrefHeight(200);
+        messageBox.setStyle("-fx-control-inner-background: black; -fx-text-fill: white;");
+
+        // Redirect System.out to messageBox
+        OutputStream out = new OutputStream() {
+            @Override
+            public void write(int b) {
+                javafx.application.Platform.runLater(() -> {
+                    messageBox.appendText(String.valueOf((char) b));
+                });
+            }
+        };
+        System.setOut(new PrintStream(out, true));
 
         ImageView enter_screen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/poker.jpg");
         StackPane stackpane = enterButton(enter_screen);
@@ -128,7 +149,7 @@ public class gui extends Application {
             AnchorPane notAvailablePage = NotAvailable(notAvailableButton);
             notAvailablePage.setPickOnBounds(false);
 
-            TextField playerName = new TextField("ENTER NAME");
+            playerName = new TextField("ENTER NAME");
             AnchorPane namePage = pName(playerName);
             namePage.setPickOnBounds(false);
 
@@ -172,27 +193,16 @@ public class gui extends Application {
         qb.setPrefWidth(168);
         qb.setPrefHeight(65);
         qb.setOnAction(e -> {
+
+            if (!game.players.containsKey(name) || name == null || name.isEmpty()) {
+                playerName.setFont(Font.font("Verdana", 15));
+                playerName.setText("Please enter your Name");
+
+                return;
+            }
+
             ImageView gScreen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/poker_table.jpg");
             imHandler(gScreen);
-
-            // Create chatbox / message area
-            TextArea messageBox = new TextArea();
-            messageBox.setEditable(false);
-            messageBox.setWrapText(true);
-            messageBox.setPrefWidth(300);
-            messageBox.setPrefHeight(200);
-            messageBox.setStyle("-fx-control-inner-background: black; -fx-text-fill: white;");
-
-            // Redirect System.out to messageBox
-            OutputStream out = new OutputStream() {
-                @Override
-                public void write(int b) {
-                    javafx.application.Platform.runLater(() -> {
-                        messageBox.appendText(String.valueOf((char) b));
-                    });
-                }
-            };
-            System.setOut(new PrintStream(out, true));
 
             Button backToMenuButton = new Button("Back to Menu");
             BackHomeButton(backToMenuButton, menuPage);
@@ -202,7 +212,7 @@ public class gui extends Application {
 
             StackPane backPane = new StackPane(backToMenuButton);
 
-            AnchorPane boxPane = new AnchorPane(gScreen, messageBox, backPane, foldPane);
+            AnchorPane boxPane = new AnchorPane(gScreen, messageBox, foldPane);
             AnchorPane.setTopAnchor(messageBox, 10.0);
             AnchorPane.setRightAnchor(messageBox, 10.0);
             AnchorPane.setBottomAnchor(backPane, 10.0);
