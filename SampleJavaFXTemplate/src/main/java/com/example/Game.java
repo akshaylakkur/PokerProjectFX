@@ -175,10 +175,10 @@ public class Game {
 			if (!players.get(x).equals(players.get(playerN)) && players.get(x).getBet() == 0) {
 				players.get(x).makeMove(randBotMove(),randbet, highestBet);
 				updatePot();
-			} else if (players.get(x).equals(players.get(playerN))){  
+			} else if (players.get(x).equals(players.get(playerN)) && players.get(x).getBet() == 0){  
 				System.out.println(players.get(playerN).getName() + " please enter your move");
 				String move = scan.nextLine();
-				System.out.println(players.get(playerN).getName() + "please enter your change amount (if you are doing call it doesnt matter)" ); 
+				System.out.println(players.get(playerN).getName() + ", please enter your bet amount, it only matters if you choose to raise" ); 
 				int am = scan.nextInt();
 				players.get(playerN).makeMove(move, am, highestBet);
 				updatePot();
@@ -191,20 +191,63 @@ public class Game {
         
 			System.out.println("Time for #2 round betting "); 
 			for(String p : players.keySet()){
-				if (players.get(p).equals(players.get(playerN))){
+				if (players.get(p).equals(players.get(playerN)) && !players.get(p).isAllIn() && !players.get(p).isFolded()){
 					System.out.println(players.get(playerN).getName() + "please enter your move"); 
 					String secMove = scan.nextLine();
-					System.out.println(players.get(playerN).getName() + ", please enter your bet amount");
+					System.out.println(players.get(playerN).getName() + ", please enter your bet amount, it only matters if you choose to raise");
 					int bet2 = scan.nextInt();
 					players.get(playerN).makeMove(secMove, bet2, highestBet);
 					updatePot();
-				} else if (!players.get(p).equals(players.get(playerN))){     
+				} else if (!players.get(p).equals(players.get(playerN)) && !players.get(p).isAllIn() && !players.get(p).isFolded()){     
 					players.get(p).makeMove(randBotMove(), randbet, highestBet);
-					updatePot();
+					updatePot();      
 				}
 			}
 
+
+			System.out.println("Now it is time for the Turn! Let the 4th card be dealt");   
+			communityCards.add(deck.dealCard());
+			System.out.println("Time for #3 round betting "); 
+			for(String p2 : players.keySet()){
+				if (players.get(p2).equals(players.get(playerN)) && !players.get(p2).isAllIn() && !players.get(p2).isFolded()){
+					System.out.println(players.get(playerN).getName() + "please enter your move"); 
+					String thirdMove = scan.nextLine();
+					System.out.println(players.get(playerN).getName() + ", please enter your bet amount, it only matters if you choose to raise");
+					int bet3 = scan.nextInt();
+					players.get(playerN).makeMove(thirdMove, bet3, highestBet);
+					updatePot();
+				} else if (!players.get(p2).equals(players.get(playerN)) && !players.get(p2).isAllIn() && !players.get(p2).isFolded()){     
+					players.get(p2).makeMove(randBotMove(), randbet, highestBet);
+					updatePot();      
+				}                        
+			}
+
+
+			System.out.println("Now it is time for the River, The final Card! Let the 5th card be dealt");   
+			communityCards.add(deck.dealCard());
+			System.out.println("Time for #4 round (final) betting "); 
+			for(String p3 : players.keySet()){
+				if (players.get(p3).equals(players.get(playerN)) && !players.get(p3).isAllIn() && !players.get(p3).isFolded()){
+					System.out.println(players.get(playerN).getName() + "please enter your move"); 
+					String finalMove = scan.nextLine();
+					System.out.println(players.get(playerN).getName() + ", please enter your bet amount, it only matters if you choose to raise");
+					int bet4 = scan.nextInt();
+					players.get(playerN).makeMove(finalMove, bet4, highestBet);
+					updatePot();
+				} else if (!players.get(p3).equals(players.get(playerN)) && !players.get(p3).isAllIn() && !players.get(p3).isFolded()){     
+					players.get(p3).makeMove(randBotMove(), randbet, highestBet);
+					updatePot();      
+				}                        
+			}
+
 			
+			
+
+			
+
+
+
+
 	
 		}
 
