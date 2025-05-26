@@ -10,9 +10,9 @@ public class Player implements Comparable<Player>{
     private boolean folded;
     private boolean allIn;
     private int money;
-    private boolean dealer;
-    private boolean smallBlind;
-    private boolean bigBlind;
+    private boolean dealer = false;
+    private boolean smallBlind = false;
+    private boolean bigBlind = false;
     
     public Player(String name, int money){
         this.name = name;

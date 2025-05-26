@@ -19,19 +19,19 @@ public class Card implements Comparable<Card>
      */
     public Card (String rank, String suit)
     {
-        if (rank.toLowerCase() == "jack")
+        if (rank.equalsIgnoreCase("jack"))
         {
             this.rank = 11;
         }
-        else if (rank.toLowerCase() == "queen")
+        else if (rank.equalsIgnoreCase("queen"))
         {
             this.rank = 12;
         }
-        else if (rank.toLowerCase() == "king")
+        else if (rank.equalsIgnoreCase("king"))
         {
             this.rank = 13;
         }
-        else if (rank.toLowerCase() == "ace")
+        else if (rank.equalsIgnoreCase("ace"))
         {
             this.rank = 14;
         }

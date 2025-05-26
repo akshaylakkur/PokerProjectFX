@@ -7,7 +7,7 @@ public class Game {
 	public HashMap<String, Player> players;
 	public HashMap<String, Integer> amount;    
 	public int pot;
-	public Scanner scan;
+	public Scanner scan = new Scanner(System.in);
 	public Random rand = new Random();
 	public Player SBPlayer;
 	public Player BBPlayer;  
@@ -55,9 +55,9 @@ public class Game {
 
 		for (Player p : playerList) {
 			if (!p.isDealer() && !p.isSmallBlind()) {
-				p.setSB();
-				SBPlayer = p;
-				System.out.println("Player " + p.getName() + " is the small blind!");
+				p.setBB();
+				BBPlayer = p;
+				System.out.println("Player " + p.getName() + " is the big blind!");
 				return;
 			}
 		}
