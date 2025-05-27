@@ -34,11 +34,13 @@ public class gui extends Application {
     private Game game;
     private String name;
     private TextArea messageBox;
+    private TextArea textInput;
     
 
     @Override
     public void start(Stage primaryStage) {
         this.messageBox = new TextArea();
+        this.textInput = new TextArea();
         this.primaryStage = primaryStage;
         this.game = new Game();
 
@@ -48,6 +50,28 @@ public class gui extends Application {
         messageBox.setPrefWidth(300);
         messageBox.setPrefHeight(200);
         messageBox.setStyle("-fx-control-inner-background: black; -fx-text-fill: white;");
+
+
+        textInput.setPromptText("Type your message here...");
+        textInput.setPrefWidth(300);
+        textInput.setPrefHeight(15);
+        textInput.setStyle("-fx-control-inner-background: white; -fx-text-fill: black;");
+        textInput.setLayoutX(890);
+        textInput.setLayoutY(189);
+
+        textInput.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ENTER:
+                    String command = textInput.getText(); // capture command before clearing
+                    textInput.clear(); // then clear
+                    event.consume();
+                    chatCommands(command); // pass the command
+                    break;
+                default:
+                    break;
+            }
+        });
+        
 
         // Redirect System.out to messageBox
         OutputStream out = new OutputStream() {
@@ -200,6 +224,10 @@ public class gui extends Application {
                 return;
             }
 
+
+
+
+
             ImageView gScreen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/poker_table.jpg");
             imHandler(gScreen);
 
@@ -226,11 +254,13 @@ public class gui extends Application {
             raise.setOnAction(t -> {
                 String amt = raise.getText();
                 game.players.get(name).raise(Integer.parseInt(amt), game.highestBet);
+                raise.setText("Raised $" + amt);
+                game.pot = Integer.parseInt(amt) + game.pot;
             });
             raise.setPrefWidth(171);
             raise.setPrefHeight(59);
 
-            AnchorPane boxPane = new AnchorPane(gScreen, messageBox, foldPane, check, call, raise);
+            AnchorPane boxPane = new AnchorPane(gScreen, messageBox, foldPane, check, call, raise, textInput);
             AnchorPane.setTopAnchor(messageBox, 10.0);
             AnchorPane.setRightAnchor(messageBox, 10.0);
             AnchorPane.setBottomAnchor(foldPane, 10.0);
@@ -242,6 +272,12 @@ public class gui extends Application {
 
             // Example output
             System.out.println("Welcome to Quick Play!");
+            System.out.println("Available Chat Commands are:");
+            System.out.println("1. highestbet - Displays the current highest bet");
+            System.out.println("2. pot - Displays the current pot amount");
+            System.out.println("3. players - Displays the current players in the game");
+            System.out.println("4. communitycards - Displays the current community cards");
+            System.out.println("5. reset - Resets the game");
         });
 
         AnchorPane gamePane = new AnchorPane();
@@ -295,10 +331,33 @@ public class gui extends Application {
         return checkPane;
     }
     
-    // public AnchorPane callBtn(Button c){
-    //     absoluteStyle(c, "Purple", 0, 729, 0);
-    // }
-    
+    public void chatCommands(String command) {
+        System.out.println(command);
+        command = command.toLowerCase().trim();
+        switch (command) {
+            case "highestbet":
+                System.out.println("Current highest bet: $" + game.highestBet);
+                break;
+            case "pot":
+                System.out.println("Current pot amount: $" + game.pot);
+                break;
+            case "players":
+                System.out.println("Current players in the game: " + game.players.keySet());
+                break;
+            case "communitycards":
+                System.out.println("Current community cards: " + game.communityCards);
+                break;
+            case "reset":
+                game.resetGame();
+                System.out.println("Game has been reset.");
+                break;
+            case "currentbet":
+                System.out.println("Current bet for " + name + ": $" + game.players.get(name).currentBet);
+                break;
+            default:
+                System.out.println("Unknown command. Please try again.");
+        }
+    }
     
     public static void main(String[] args) {
         launch(args);

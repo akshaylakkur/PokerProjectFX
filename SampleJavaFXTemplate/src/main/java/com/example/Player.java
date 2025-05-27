@@ -4,15 +4,15 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class Player implements Comparable<Player>{
-    private String name;
-    private TreeSet<Card> cards = new TreeSet<Card>();
-    private int currentBet;
-    private boolean folded;
-    private boolean allIn;
-    private int money;
-    private boolean dealer = false;
-    private boolean smallBlind = false;
-    private boolean bigBlind = false;
+    public String name;
+    public TreeSet<Card> cards = new TreeSet<Card>();
+    public int currentBet;
+    public boolean folded;
+    public boolean allIn;
+    public int money;
+    public boolean dealer = false;
+    public boolean smallBlind = false;
+    public boolean bigBlind = false;
     
     public Player(String name, int money){
         this.name = name;
