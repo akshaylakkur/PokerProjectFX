@@ -197,7 +197,6 @@ public class gui extends Application {
             if (!game.players.containsKey(name) || name == null || name.isEmpty()) {
                 playerName.setFont(Font.font("Verdana", 15));
                 playerName.setText("Please enter your Name");
-
                 return;
             }
 
@@ -262,13 +261,6 @@ public class gui extends Application {
         style(f, "red", Pos.BOTTOM_CENTER, 30);
         f.setOnAction(e -> {
             game.players.get(name).fold();
-            game.players.remove(name);
-            game.resetGame();
-            PauseTransition delay = new PauseTransition(Duration.seconds(5));
-                delay.setOnFinished(event -> {
-                    primaryStage.getScene().setRoot(menuPage);
-        });
-        delay.play();
         });
         AnchorPane foldPane = new AnchorPane();
         foldPane.getChildren().add(f);
