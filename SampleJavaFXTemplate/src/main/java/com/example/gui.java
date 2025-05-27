@@ -209,15 +209,33 @@ public class gui extends Application {
             Button fold = new Button("Fold");
             AnchorPane foldPane = foldBtn(fold);
 
-            StackPane backPane = new StackPane(backToMenuButton);
+            Button check = new Button("Check");
+            absoluteStyle(check, "Blue", 740, 729, 30);
+            check.setOnAction(t -> {
+                game.players.get(name).check(game.highestBet);
+            });
 
-            AnchorPane boxPane = new AnchorPane(gScreen, messageBox, foldPane);
+            Button call = new Button("Call");
+            absoluteStyle(call, "Orange", 340, 729, 30);
+            call.setOnAction(t -> {
+                game.players.get(name).call(game.highestBet);
+            });
+
+            TextField raise = new TextField("Raise Amount");
+            absoluteText(raise, "Black", 13, 729, 18);
+            raise.setOnAction(t -> {
+                String amt = raise.getText();
+                game.players.get(name).raise(Integer.parseInt(amt), game.highestBet);
+            });
+            raise.setPrefWidth(171);
+            raise.setPrefHeight(59);
+
+            AnchorPane boxPane = new AnchorPane(gScreen, messageBox, foldPane, check, call, raise);
             AnchorPane.setTopAnchor(messageBox, 10.0);
             AnchorPane.setRightAnchor(messageBox, 10.0);
-            AnchorPane.setBottomAnchor(backPane, 10.0);
-            AnchorPane.setLeftAnchor(backPane, 10.0);
             AnchorPane.setBottomAnchor(foldPane, 10.0);
             AnchorPane.setRightAnchor(foldPane, 10.0);
+            
 
             
             primaryStage.getScene().setRoot(boxPane);    
@@ -266,6 +284,22 @@ public class gui extends Application {
         foldPane.getChildren().add(f);
         return foldPane;
     }
+    
+    public AnchorPane checkBtn(Button c){
+        absoluteStyle(c, "Blue", 740, 729, 30);
+        c.setOnAction(e -> {
+            game.players.get(name).check(game.highestBet);
+        });
+        AnchorPane checkPane = new AnchorPane();
+        checkPane.getChildren().add(c);
+        return checkPane;
+    }
+    
+    // public AnchorPane callBtn(Button c){
+    //     absoluteStyle(c, "Purple", 0, 729, 0);
+    // }
+    
+    
     public static void main(String[] args) {
         launch(args);
     }

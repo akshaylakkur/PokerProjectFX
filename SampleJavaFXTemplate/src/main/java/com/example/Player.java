@@ -61,7 +61,7 @@ public class Player implements Comparable<Player>{
         
         }
 
-        System.out.println(name + " has raised th highest ammount to $" + currentBet);  
+        System.out.println(name + " has raised the highest amount to $" + currentBet);  
     }
 
     public void bet(int amount) {
@@ -103,9 +103,9 @@ public class Player implements Comparable<Player>{
 
     public void check(int HighestBet){
         if (canCheck(HighestBet)){
-            System.out.println(name + "has decided to check");
+            System.out.println(name + " has decided to check");
         } else {
-            System.out.println(name + "cant bet, must call or raise  ");  
+            System.out.println(name + " cant bet, must call or raise  ");  
             Scanner scan = new Scanner(System.in); 
             String m = scan.next();
             System.out.println("enter amount");
