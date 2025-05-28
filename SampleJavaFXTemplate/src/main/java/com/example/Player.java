@@ -12,6 +12,7 @@ public class Player {
     public boolean smallBlind;
     public boolean bigBlind;
     public boolean hasActed;
+    public boolean isBankrupt;
     
     public Player(String name, int startingMoney) {
         this.name = name;
@@ -23,6 +24,7 @@ public class Player {
         this.smallBlind = false;
         this.bigBlind = false;
         this.hasActed = false;
+        this.isBankrupt = false;
     }
     
     public void addCard(Card card) {
@@ -141,6 +143,13 @@ public class Player {
     
     public boolean needsToAct(int highestBet) {
         return !folded && !allIn && (!hasActed || currentBet < highestBet);
+    }
+
+    public boolean isBankrupt(){
+        if (money <= 0){
+            isBankrupt = true;
+        }
+        return isBankrupt;
     }
     
     @Override
