@@ -327,20 +327,20 @@ public class gui extends Application {
             communityCardViews = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 ImageView cardView = new ImageView();
-                cardView.setFitWidth(80);
-                cardView.setFitHeight(110);
-                cardView.setLayoutX(350 + i * 90); // Position community cards centrally
-                cardView.setLayoutY(280);
+                cardView.setFitWidth(92);
+                cardView.setFitHeight(114);
+                cardView.setLayoutX(353 + i * 97); // Position community cards centrally
+                cardView.setLayoutY(267);
                 communityCardViews.add(cardView);
             }
 
             humanPlayerCardViews = new ArrayList<>();
             for (int i = 0; i < 2; i++) {
                 ImageView cardView = new ImageView();
-                cardView.setFitWidth(80);
-                cardView.setFitHeight(110);
-                cardView.setLayoutX(450 + i * 90); // Position human player cards
-                cardView.setLayoutY(550);
+                cardView.setFitWidth(139);
+                cardView.setFitHeight(247);
+                cardView.setLayoutX(17 + i * 165); // Position human player cards
+                cardView.setLayoutY(51);
                 humanPlayerCardViews.add(cardView);
             }
 
@@ -495,10 +495,13 @@ public class gui extends Application {
             for (int i = 0; i < humanPlayerCardViews.size(); i++) {
                 if (i < human.cards.size()) {
                     // Load card image (needs to map Card object to image file)
+                    ImageView imgvw = humanPlayerCardViews.get(i);
                     Card card = human.cards.get(i);
                     String cardImagePath = getCardImagePath(card); // Helper method needed
-                    humanPlayerCardViews.get(i).setImage(new Image("file:" + cardImagePath));
+                    imgvw.setImage(new Image("file:" + cardImagePath));
+                    // System.out.println("Passed");
                 } else {
+                    // System.out.println("BOO");
                     humanPlayerCardViews.get(i).setImage(null); // Clear unused card slots
                 }
             }
@@ -510,8 +513,10 @@ public class gui extends Application {
                 Card card = game.getCommunityCards().get(i);
                 String cardImagePath = getCardImagePath(card);
                 communityCardViews.get(i).setImage(new Image("file:" + cardImagePath));
+                // System.out.println("Passed community card " + i + ": " + cardImagePath);
             } else {
                 communityCardViews.get(i).setImage(null); // Clear unused card slots
+                // System.out.println("BOO community card " + i);
             }
         }
 
@@ -543,7 +548,7 @@ public class gui extends Application {
         }
         String suitStr = card.getSuit().toLowerCase(); // "hearts", "diamonds", "clubs", "spades"
         // Construct the path: e.g., "clubs_2.png", "hearts_K.png"
-        return "SampleJavaFXTemplate/src/main/java/com/example/images/cards/" + suitStr + "_" + valueStr + ".png";
+        return "SampleJavaFXTemplate/src/main/java/com/example/cards_dir/" + suitStr + "_" + valueStr + ".png";
     }
 
     public static void main(String[] args) {
