@@ -8,6 +8,7 @@ public class gameV2 {
     public Deck deck;
     public ArrayList<Card> communityCards;
     public int pot;
+    public ArrayList<Integer> sidePots;
     public int highestBet;
     public int smallBlindAmount = 10;
     public int bigBlindAmount = 20;
@@ -211,7 +212,12 @@ public class gameV2 {
                 }
                 humanPlayer.raise(amount, highestBet);
                 updateHighestBet(humanPlayer.currentBet);
-                break;
+                for (Player player : players.values()) {
+                    if (humanPlayer.allIn && !player.isBankrupt){
+                        //TODO Implement side pot logic
+                        break;
+                    }
+                }
             default:
                 System.out.println("Invalid action: " + action);
                 return;
@@ -371,6 +377,9 @@ public class gameV2 {
         System.out.println("Your hole cards: " + human.cards);
     }
     
+    /*
+     * Sets the small and big blinds.
+     */
     private void setBlinds() {
         // Small blind
         int sbIndex = (dealerIndex + 1) % turnOrder.size();
@@ -433,6 +442,12 @@ public class gameV2 {
         winner.changeMoney(pot);
         
         endHand();
+    }
+
+    private void evaluateSidePots(){ //TODO FINish method
+        if (sidePots.isEmpty()){
+        }
+
     }
     
     private void endHand() {
@@ -504,6 +519,10 @@ public class gameV2 {
     
     public int getPot() {
         return pot;
+    }
+
+    public ArrayList<Integer> getSidePots(){
+        return sidePots;
     }
     
     public int getHighestBet() {
