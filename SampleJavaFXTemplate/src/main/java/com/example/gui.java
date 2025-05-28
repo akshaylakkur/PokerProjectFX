@@ -241,9 +241,9 @@ public class gui extends Application {
                 return;
             }
 
-            // Ensure game is initialized with the humanPlayerName and GUI reference
+            // Ensure game is initialized with the humanPlayerName 
             if (game == null || !game.humanPlayerName.equals(humanPlayerName)) {
-                game = new gameV2(humanPlayerName); // Pass 'this' GUI instance
+                game = new gameV2(humanPlayerName); 
                 System.out.println("Game initialized for " + humanPlayerName);
             }
 
@@ -316,13 +316,13 @@ public class gui extends Application {
 
             // Initialize and position UI elements for game display
             potLabel = new Label("Pot: $0");
-            absoluteStyleLabel(potLabel, "white", 10, 10, 20); // Top-left
+            absoluteStyleLabel(potLabel, "white", 381, 46, 20); // Top-left
             highestBetLabel = new Label("Highest Bet: $0");
-            absoluteStyleLabel(highestBetLabel, "white", 10, 40, 20); // Below pot
+            absoluteStyleLabel(highestBetLabel, "white", 381, 84, 20); // Below pot
             humanMoneyLabel = new Label("Your Money: $0");
-            absoluteStyleLabel(humanMoneyLabel, "white", 450, 670, 20); // Near human player cards
+            absoluteStyleLabel(humanMoneyLabel, "white", 660, 46, 20); // Near human player cards
             humanCurrentBetLabel = new Label("Your Bet: $0");
-            absoluteStyleLabel(humanCurrentBetLabel, "white", 450, 700, 20); // Below human money
+            absoluteStyleLabel(humanCurrentBetLabel, "white", 660, 84, 20); // Below human money
 
             communityCardViews = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
