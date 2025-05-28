@@ -1,60 +1,58 @@
 package com.example;
 
-public class Card implements Comparable<Card>
-{
-    private Integer rank;
+public class Card implements Comparable<Card> {
+    private Object value; // Can be Integer or String (for face cards)
     private String suit;
-
-    /*
-     * Precondition: 0 < rank < 15 and suit is either spades, hearts, clubs, or diamonds
-     */
-    public Card (Integer rank, String suit)
-    {
-        this.rank = rank;
+    
+    public Card(Object value, String suit) {
+        this.value = value;
         this.suit = suit;
     }
-
-    /*
-     * Precondition: Rank is either jack, queen, king, or ace
-     */
-    public Card (String rank, String suit)
-    {
-        if (rank.equalsIgnoreCase("jack"))
-        {
-            this.rank = 11;
-        }
-        else if (rank.equalsIgnoreCase("queen"))
-        {
-            this.rank = 12;
-        }
-        else if (rank.equalsIgnoreCase("king"))
-        {
-            this.rank = 13;
-        }
-        else if (rank.equalsIgnoreCase("ace"))
-        {
-            this.rank = 14;
-        }
-        this.suit = suit;
+    
+    public Object getValue() {
+        return value;
     }
-
-    public Integer getRank()
-    {
-        return rank;
-    }
-
-    public String getSuit()
-    {
+    
+    public String getSuit() {
         return suit;
     }
-
-    public int compareTo(Card other)
-    {
-        return (rank - other.getRank());
+    
+    public int getNumericValue() {
+        if (value instanceof Integer) {
+            return (Integer) value;
+        } else if (value instanceof String) {
+            String strValue = (String) value;
+            switch (strValue) {
+                case "Jack": return 11;
+                case "Queen": return 12;
+                case "King": return 13;
+                case "Ace": return 14; // High ace
+                default: return 0;
+            }
+        }
+        return 0;
     }
-
-    public String toString()
-    {
-        return ("Suit: " + suit + "\nRank: " + rank.toString());
+    
+    @Override
+    public String toString() {
+        return value + " of " + suit;
+    }
+    
+    @Override
+    public int compareTo(Card other) {
+        return Integer.compare(this.getNumericValue(), other.getNumericValue());
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Card card = (Card) obj;
+        return value.equals(card.value) && suit.equals(card.suit);
+    }
+    
+    @Override
+    public int hashCode() {
+        return value.hashCode() * 31 + suit.hashCode();
     }
 }

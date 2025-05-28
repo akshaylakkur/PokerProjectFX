@@ -1,193 +1,151 @@
 package com.example;
-import java.util.*;
-import java.util.Set;
-import java.util.TreeSet;
 
-public class Player implements Comparable<Player>{
+import java.util.ArrayList;
+
+public class Player {
     public String name;
-    public TreeSet<Card> cards = new TreeSet<Card>();
+    public int money;
+    public ArrayList<Card> cards;
     public int currentBet;
     public boolean folded;
     public boolean allIn;
-    public int money;
-    public boolean dealer = false;
-    public boolean smallBlind = false;
-    public boolean bigBlind = false;
+    public boolean smallBlind;
+    public boolean bigBlind;
+    public boolean hasActed;
     
-    public Player(String name, int money){
+    public Player(String name, int startingMoney) {
         this.name = name;
-        folded = false;
-        allIn = false;
-        currentBet = 0;
-        this.money = money;       
+        this.money = startingMoney;
+        this.cards = new ArrayList<>();
+        this.currentBet = 0;
+        this.folded = false;
+        this.allIn = false;
+        this.smallBlind = false;
+        this.bigBlind = false;
+        this.hasActed = false;
     }
-
-    public void addCard(Card card){
-        if (cards.size() <= 2){ //Each player gets 2 cards
-            cards.add(card);
-        }
+    
+    public void addCard(Card card) {
+        cards.add(card);
     }
-
-    public void makeMove(String move, int amt, int currentHighestBet) {
-        move = move.toLowerCase();
-        if (move.equals("bet")) {
-            bet(amt);
-        } else if (move.equals("call")) {
-            call(currentHighestBet);
-        } else if (move.equals("raise")) {
-            raise(amt, currentHighestBet);
-        } else if (move.equals("check")) {
-            canCheck(currentHighestBet);
-        } else if (move.equals("allin")) {
-            currentBet += money;
-            money = 0;
-            allIn = true;
-        } else if (move.equals("fold")) {
-            fold();
-        }
+    
+    public void fold() {
+        this.folded = true;
+        this.hasActed = true;
+        System.out.println(name + " folds");
     }
-
-    public void raise(int raiseAmount, int highestBet) {
-        int toCall = highestBet - currentBet;
-        int totalAmount = toCall + raiseAmount;
-
-        if (totalAmount >= money) {
-            currentBet += money;
-            money = 0;
-            allIn = true;
+    
+    public boolean canCheck(int highestBet) {
+        return currentBet == highestBet;
+    }
+    
+    public void check(int highestBet) {
+        if (canCheck(highestBet)) {
+            this.hasActed = true;
+            System.out.println(name + " checks");
         } else {
-            money -= totalAmount;
-            currentBet += totalAmount;    
-        
+            System.out.println(name + " cannot check - must call or raise");
         }
-
-        System.out.println(name + " has raised the highest amount to $" + currentBet);  
     }
-
+    
+    public void call(int highestBet) {
+        int callAmount = highestBet - currentBet;
+        if (callAmount <= 0) {
+            // Already matched the bet, just check
+            check(highestBet);
+            return;
+        }
+        
+        if (callAmount >= money) {
+            // All-in call
+            currentBet += money;
+            money = 0;
+            allIn = true;
+            System.out.println(name + " goes all-in calling with $" + currentBet + " total");
+        } else {
+            money -= callAmount;
+            currentBet += callAmount;
+            System.out.println(name + " calls $" + callAmount + " (total bet: $" + currentBet + ")");
+        }
+        this.hasActed = true;
+    }
+    
+    public void raise(int raiseAmount, int highestBet) {
+        if (raiseAmount <= 0) {
+            System.out.println("Raise amount must be positive!");
+            return;
+        }
+        
+        int totalBet = highestBet + raiseAmount;
+        int additionalAmount = totalBet - currentBet;
+        
+        if (additionalAmount >= money) {
+            // All-in raise - bet all remaining money
+            int actualRaise = money - (highestBet - currentBet);
+            if (actualRaise <= 0) {
+                // Can't raise, just call
+                call(highestBet);
+                return;
+            }
+            currentBet += money;
+            money = 0;
+            allIn = true;
+            System.out.println(name + " goes all-in raising to $" + currentBet + " total");
+        } else {
+            money -= additionalAmount;
+            currentBet = totalBet;
+            System.out.println(name + " raises by $" + raiseAmount + " to $" + currentBet + " total");
+        }
+        this.hasActed = true;
+    }
+    
     public void bet(int amount) {
+        if (amount <= 0) return;
+        
         if (amount >= money) {
             currentBet += money;
             money = 0;
             allIn = true;
+            System.out.println(name + " bets all-in: $" + currentBet);
         } else {
             money -= amount;
             currentBet += amount;
+            System.out.println(name + " bets $" + amount + " (total: $" + currentBet + ")");
         }
-    }
-
-    public void call(int highestBet) {
-        int toCall = highestBet - currentBet;
-        if (toCall >= money) {
-            currentBet += money;
-            money = 0;
-            allIn = true;
-        } else {
-            money -= toCall;
-            currentBet += toCall;
-        }
-
-        System.out.println(name + " has called $" + toCall + " to match the highest bet");   
-    }
-
-    public void fold(){
-        folded = true;
-        money -= currentBet;
-        currentBet = 0;
-        System.out.println(name + " has folded from the game");  
-    }
-
-
-    public boolean canCheck(int highestBet) {
-        return currentBet == highestBet;
-    }
-
-    public void check(int HighestBet){
-        if (canCheck(HighestBet)){
-            System.out.println(name + " has decided to check");
-        } else {
-            System.out.println(name + " cant bet, must call or raise  ");  
-            Scanner scan = new Scanner(System.in); 
-            String m = scan.next();
-            System.out.println("enter amount");
-            int x = scan.nextInt();      
-            makeMove(m,x ,HighestBet);
-            scan.close();
-        }
-    }
-
-
-    public int getMoney(){
-        return money;
+        this.hasActed = true;
     }
     
-    public int getBet(){
-        return currentBet;
-    }
-
-    public boolean isBetOverBalance(int bet){
-        return (bet - money > 0);
-    }
-
-    public boolean isBankrupt(){
-        return !(money > 0);
-    }
-
-    public boolean isFolded(){
-        return folded;
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public boolean isAllIn(){
-        return allIn;
-    }
-
-    public boolean isDealer(){
-        return dealer;
+    public void changeMoney(int amount) {
+        money += amount;
+        if (money < 0) money = 0; // Prevent negative money
     }
     
-    public boolean isSmallBlind(){
-        return smallBlind;
-    }
-
-    public boolean isBigBlind(){
-        return bigBlind;
-    }
-
-    public TreeSet<Card> getPlayerCards(){
-        return cards;
-    }
-
-    public void setBB(){
-        bigBlind = true;
-    }
-
-    public void setSB(){
-        smallBlind = true;
-    }
-
-    public void setDealer(){
-        dealer = true;
-    }
-
-    public void changeMoney(int m){
-        money += m;
-    }
-
-    public void reset() {
-        cards.clear();
+    public void resetForNewHand() {
         folded = false;
         allIn = false;
-        dealer = false;
         smallBlind = false;
         bigBlind = false;
-        cards.clear();
+        hasActed = false;
         currentBet = 0;
+        cards.clear();
     }
-
-    public int compareTo(Player other){
-        return this.getName().compareTo(other.getName());
+    
+    public void resetForNewBettingRound() {
+        hasActed = false;
+        // currentBet stays - it gets collected into pot by game manager
+    }
+    
+    public boolean isActive() {
+        return !folded && money > 0;
+    }
+    
+    public boolean needsToAct(int highestBet) {
+        return !folded && !allIn && (!hasActed || currentBet < highestBet);
+    }
+    
+    @Override
+    public String toString() {
+        return name + " (Money: $" + money + ", Current Bet: $" + currentBet + 
+               (folded ? ", FOLDED" : "") + (allIn ? ", ALL-IN" : "") + ")";
     }
 }

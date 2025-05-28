@@ -31,7 +31,7 @@ public class gui extends Application {
     private ImageView menuScreen;
     private ImageView rulesScreen;
     private AnchorPane rulesPage;
-    private Game game;
+    private gameV2 game;
     private String name;
     private TextArea messageBox;
     private TextArea textInput;
@@ -42,7 +42,7 @@ public class gui extends Application {
         this.messageBox = new TextArea();
         this.textInput = new TextArea();
         this.primaryStage = primaryStage;
-        this.game = new Game();
+        this.game = null;
 
         // Create chatbox / message area
         messageBox.setEditable(false);
@@ -212,78 +212,96 @@ public class gui extends Application {
         return rulesPane;
     }
 
+
+
     public AnchorPane quickPlay(Button qb){
         absoluteStyle(qb, "Blue", 314, 545, 20);
         qb.setPrefWidth(168);
         qb.setPrefHeight(65);
         qb.setOnAction(e -> {
-
-            if (!game.players.containsKey(name) || name == null || name.isEmpty()) {
+    
+            if (game == null || name == null || name.isEmpty()) {
                 playerName.setFont(Font.font("Verdana", 15));
                 playerName.setText("Please enter your Name");
                 return;
             }
-
-
-
-
-
+    
             ImageView gScreen = enterScreen("SampleJavaFXTemplate/src/main/java/com/example/images/poker_table.jpg");
             imHandler(gScreen);
-
+    
             Button backToMenuButton = new Button("Back to Menu");
             BackHomeButton(backToMenuButton, menuPage);
-
+    
             Button fold = new Button("Fold");
-            AnchorPane foldPane = foldBtn(fold);
-
+            absoluteStyle(fold, "red", 540, 729, 30);
+            fold.setOnAction(t -> {
+                game.processHumanMove("fold", 0);
+            });
+    
             Button check = new Button("Check");
             absoluteStyle(check, "Blue", 740, 729, 30);
             check.setOnAction(t -> {
-                game.players.get(name).check(game.highestBet);
+                game.processHumanMove("check", 0);
             });
-
+    
             Button call = new Button("Call");
             absoluteStyle(call, "Orange", 340, 729, 30);
             call.setOnAction(t -> {
-                game.players.get(name).call(game.highestBet);
+                game.processHumanMove("call", 0);
             });
-
+    
             TextField raise = new TextField("Raise Amount");
             absoluteText(raise, "Black", 13, 729, 18);
             raise.setOnAction(t -> {
-                String amt = raise.getText();
-                game.players.get(name).raise(Integer.parseInt(amt), game.highestBet);
-                raise.setText("Raised $" + amt);
-                game.pot = Integer.parseInt(amt) + game.pot;
+                try {
+                    String amt = raise.getText();
+                    int raiseAmount = Integer.parseInt(amt);
+                    game.processHumanMove("raise", raiseAmount);
+                    raise.setText("Raised $" + amt);
+                } catch (NumberFormatException ex) {
+                    raise.setText("Invalid amount");
+                }
             });
             raise.setPrefWidth(171);
             raise.setPrefHeight(59);
-
-            AnchorPane boxPane = new AnchorPane(gScreen, messageBox, foldPane, check, call, raise, textInput);
+    
+            // Button to start new game
+            Button startGameButton = new Button("Start Game");
+            absoluteStyle(startGameButton, "Green", 13, 650, 20);
+            startGameButton.setOnAction(t -> {
+                game.startNewGame();
+            });
+    
+            AnchorPane boxPane = new AnchorPane(gScreen, messageBox, fold, check, call, raise, textInput, startGameButton);
             AnchorPane.setTopAnchor(messageBox, 10.0);
             AnchorPane.setRightAnchor(messageBox, 10.0);
-            AnchorPane.setBottomAnchor(foldPane, 10.0);
-            AnchorPane.setRightAnchor(foldPane, 10.0);
-            
-
             
             primaryStage.getScene().setRoot(boxPane);    
-
-            // Example output
-            System.out.println("Welcome to Quick Play!");
-            System.out.println("Available Chat Commands are:");
-            System.out.println("1. highestbet - Displays the current highest bet");
-            System.out.println("2. pot - Displays the current pot amount");
-            System.out.println("3. players - Displays the current players in the game");
-            System.out.println("4. communitycards - Displays the current community cards");
-            System.out.println("5. reset - Resets the game");
+    
+            // Start the game automatically
+            game.startNewGame();
+    
+            // Welcome message
+            System.out.println("Welcome to Texas Hold'em Poker!");
+            System.out.println("You are playing against 5 CPU players.");
+            System.out.println("Available Chat Commands:");
+            System.out.println("1. pot - Current pot amount");
+            System.out.println("2. players - Current players");
+            System.out.println("3. gamestate - Current game state");
+            System.out.println("4. turn - Whose turn it is");
+            System.out.println("5. cards - Your current cards");
         });
-
+    
         AnchorPane gamePane = new AnchorPane();
         gamePane.getChildren().add(qb);
         return gamePane;
     }
+
+
+
+
+
+
 
     public AnchorPane NotAvailable(Button na){
         absoluteStyle(na, "red", 518, 545, 18);
@@ -301,16 +319,18 @@ public class gui extends Application {
         pn.setOnAction(e -> {
             name = pn.getText();
             pn.setText("Saved");
-            Player p = new Player(name, 1000);
-            game.players.put(name, p);
-            game.amount.put(name, 1000);
+            
+            // Create new game instance with human player
+            game = new gameV2(name);
+            
             System.out.println("Player " + name + " has been added to the game with starting cash at $1000.");
+            System.out.println("Game created with CPU players: cpu1, cpu2, cpu3, cpu4, cpu5");
         });
         AnchorPane namePane = new AnchorPane();
         namePane.getChildren().add(pn);
         return namePane;
     }
-
+    
     public AnchorPane foldBtn(Button f){
         style(f, "red", Pos.BOTTOM_CENTER, 30);
         f.setOnAction(e -> {
@@ -334,28 +354,50 @@ public class gui extends Application {
     public void chatCommands(String command) {
         System.out.println(command);
         command = command.toLowerCase().trim();
+        
+        if (game == null) {
+            System.out.println("No game in progress. Please start a game first.");
+            return;
+        }
+        
         switch (command) {
-            case "highestbet":
-                System.out.println("Current highest bet: $" + game.highestBet);
-                break;
             case "pot":
-                System.out.println("Current pot amount: $" + game.pot);
+                System.out.println("Current pot amount: $" + game.getPot());
                 break;
             case "players":
-                System.out.println("Current players in the game: " + game.players.keySet());
+                System.out.println("Current players: " + game.players.keySet());
                 break;
+            case "gamestate":
+                System.out.println("Current game state: " + game.getGameState());
+                break;
+            case "turn":
+                System.out.println("Current turn: " + game.getCurrentPlayerName());
+                if (game.isHumanPlayerTurn()) {
+                    System.out.println("It's YOUR turn!");
+                }
+                break;
+            case "cards":
+                if (game.players.containsKey(name)) {
+                    System.out.println("Your cards: " + game.players.get(name).cards);
+                }
+                break;
+            case "community":
             case "communitycards":
-                System.out.println("Current community cards: " + game.communityCards);
+                System.out.println("Community cards: " + game.getCommunityCards());
                 break;
-            case "reset":
-                game.resetGame();
-                System.out.println("Game has been reset.");
+            case "highestbet":
+                System.out.println("Current highest bet: $" + game.getHighestBet());
                 break;
-            case "currentbet":
-                System.out.println("Current bet for " + name + ": $" + game.players.get(name).currentBet);
+            case "money":
+                if (game.players.containsKey(name)) {
+                    System.out.println("Your money: $" + game.players.get(name).money);
+                }
+                break;
+            case "help":
+                System.out.println("Available commands: pot, players, gamestate, turn, cards, community, highestbet, money, help");
                 break;
             default:
-                System.out.println("Unknown command. Please try again.");
+                System.out.println("Unknown command. Type 'help' for available commands.");
         }
     }
     
