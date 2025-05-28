@@ -287,7 +287,7 @@ public class gui extends Application {
             });
 
             TextField raise = new TextField("Raise Amount");
-            absoluteText(raise, "Black", 13, 729, 18);
+            absoluteText(raise, "Black", 952, 729, 25);
             raise.setOnAction(t -> {
                 if (game.isHumanPlayerTurn()) {
                     try {
@@ -303,7 +303,7 @@ public class gui extends Application {
                     System.out.println("It's not your turn!");
                 }
             });
-            raise.setPrefWidth(171);
+            raise.setPrefWidth(215);
             raise.setPrefHeight(59);
 
             // Button to start new game
