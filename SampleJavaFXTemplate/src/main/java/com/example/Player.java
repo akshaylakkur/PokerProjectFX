@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Player {
     public String name;
     public int money;
-    public ArrayList<Card> cards;
+    public ArrayList<Card> cards = new ArrayList<Card>();
     public int currentBet;
     public boolean folded;
     public boolean allIn;
@@ -150,6 +150,10 @@ public class Player {
             isBankrupt = true;
         }
         return isBankrupt;
+    }
+
+    public ArrayList<Card> getPlayerCards(){
+        return cards;
     }
     
     @Override

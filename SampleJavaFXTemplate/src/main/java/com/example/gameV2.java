@@ -77,7 +77,7 @@ public class gameV2 {
         startBettingRound();
     }
     
-    private void startBettingRound() {
+    public void startBettingRound() {
         System.out.println("\n=== " + gameState + " BETTING ROUND ===");
         if (!communityCards.isEmpty()) {
             System.out.println("Community Cards: " + communityCards);
@@ -101,7 +101,7 @@ public class gameV2 {
         }
     }
     
-    private void findFirstPlayerToAct() {
+    public void findFirstPlayerToAct() {
         // For pre-flop, start after big blind. For other rounds, start after dealer
         if (gameState == GameState.PRE_FLOP) {
             currentPlayerIndex = (dealerIndex + 3) % turnOrder.size(); // After big blind
@@ -127,7 +127,7 @@ public class gameV2 {
         }
     }
     
-    private void processCPUTurns() {
+    public void processCPUTurns() {
         while (gameInProgress && !waitingForHumanInput && needMoreActions()) {
             Player currentPlayer = players.get(currentPlayerName);
             
@@ -150,7 +150,7 @@ public class gameV2 {
         }
     }
     
-    private boolean needMoreActions() {
+    public boolean needMoreActions() {
         List<Player> activePlayers = getActivePlayers();
         if (activePlayers.size() <= 1) {
             return false; // Only one player left
@@ -165,7 +165,7 @@ public class gameV2 {
         return false;
     }
     
-    private void displayPlayerTurnInfo() {
+    public void displayPlayerTurnInfo() {
         Player currentPlayer = players.get(currentPlayerName);
         System.out.println("\n" + currentPlayerName + "'s turn to act");
         System.out.println("Your cards: " + currentPlayer.cards);
@@ -230,7 +230,7 @@ public class gameV2 {
         processCPUTurns();
     }
     
-    private void makeCPUMove(Player cpu) {
+    public void makeCPUMove(Player cpu) {
         Random rand = new Random();
         
         // Simple CPU AI logic
@@ -266,7 +266,7 @@ public class gameV2 {
         }
     }
     
-    private void moveToNextPlayer() {
+    public void moveToNextPlayer() {
         int attempts = 0;
         do {
             currentPlayerIndex = (currentPlayerIndex + 1) % turnOrder.size();
@@ -276,7 +276,7 @@ public class gameV2 {
                 (!players.get(currentPlayerName).needsToAct(highestBet)));
     }
     
-    private void updateHighestBet(int bet) {
+    public void updateHighestBet(int bet) {
         if (bet > highestBet) {
             highestBet = bet;
             
@@ -289,7 +289,7 @@ public class gameV2 {
         }
     }
     
-    private void advanceGameState() {
+    public void advanceGameState() {
         // Collect all bets into pot
         collectBetsIntoPot();
         
@@ -320,13 +320,41 @@ public class gameV2 {
                 endHand();
                 return;
         }
+
+
+
+
+       /*  switch (gameState) {  // uncomment this part in class and try for it cuz 2x bet every round
+            case PRE_FLOP:
+                runBettingRound();
+                dealFlop();
+                gameState = GameState.FLOP;
+                break;
+            case FLOP:
+                runBettingRound();
+                dealTurn();
+                gameState = GameState.TURN;
+                break;
+            case TURN:
+                runBettingRound();
+                dealRiver();
+                gameState = GameState.RIVER;
+                break;
+            case RIVER:
+                runBettingRound();
+                revealHandsAndDetermineWinner();
+                gameState = GameState.SHOWDOWN;
+                break;
+        }  **/
+
+        
         
         // Reset betting for new round
         highestBet = 0;
         startBettingRound();
     }
     
-    private void collectBetsIntoPot() {
+    public void collectBetsIntoPot() {
         System.out.println("Collecting bets into pot...");
         for (Player player : players.values()) {
             if (player.currentBet > 0) {
@@ -338,7 +366,7 @@ public class gameV2 {
         System.out.println("Total pot: $" + pot);
     }
     
-    private List<Player> getActivePlayers() {
+    public List<Player> getActivePlayers() {
         List<Player> active = new ArrayList<>();
         for (Player player : players.values()) {
             if (!player.folded) {
@@ -348,7 +376,7 @@ public class gameV2 {
         return active;
     }
     
-    private void resetForNewHand() {
+    public void resetForNewHand() {
         deck = new Deck();
         communityCards.clear();
         pot = 0;
@@ -361,7 +389,7 @@ public class gameV2 {
         }
     }
     
-    private void dealInitialCards() {
+    public void dealInitialCards() {
         System.out.println("Dealing hole cards...");
         for (int i = 0; i < 2; i++) {
             for (String playerName : turnOrder) {
@@ -380,7 +408,7 @@ public class gameV2 {
     /*
      * Sets the small and big blinds.
      */
-    private void setBlinds() {
+    public void setBlinds() {
         // Small blind
         int sbIndex = (dealerIndex + 1) % turnOrder.size();
         String sbPlayer = turnOrder.get(sbIndex);
@@ -401,7 +429,7 @@ public class gameV2 {
         System.out.println(bbPlayer + " posts big blind: $" + bbPlayerObj.currentBet);
     }
     
-    private void dealFlop() {
+    public void dealFlop() {
         deck.dealCard(); // Burn card
         for (int i = 0; i < 3; i++) {
             communityCards.add(deck.dealCard());
@@ -409,48 +437,101 @@ public class gameV2 {
         System.out.println("FLOP: " + communityCards.subList(0, 3));
     }
     
-    private void dealTurn() {
+    public void dealTurn() {
         deck.dealCard(); // Burn card
         communityCards.add(deck.dealCard());
         System.out.println("TURN: " + communityCards.get(3));
     }
     
-    private void dealRiver() {
+    public void dealRiver() {
         deck.dealCard(); // Burn card
         communityCards.add(deck.dealCard());
         System.out.println("RIVER: " + communityCards.get(4));
     }
     
-    private void showdown() {
-        System.out.println("\n=== SHOWDOWN ===");
-        List<Player> activePlayers = getActivePlayers();
-        
-        // Collect any remaining bets
-        collectBetsIntoPot();
-        
-        // Display all active players' cards
-        for (Player player : activePlayers) {
-            System.out.println(player.name + "'s cards: " + player.cards);
+    public void showdown() {
+        System.out.println("Showdown!");
+        gameState = GameState.SHOWDOWN;
+
+        int bestRank = -1;
+        int bestHighCard = -1;
+        String bestHandType = "";
+        ArrayList<String> winners = new ArrayList<>();
+
+        for (String x : players.keySet()) {
+            Player player = players.get(x);
+
+            if (!player.folded) {
+                WinningScenario scenario = new WinningScenario(player, new ArrayList<Card>(communityCards));
+                String type = scenario.getScenario();
+                Card highCard = scenario.getHighestCard();
+                int rank = 0;
+
+                if (type.equals("Royal Flush")) rank = 10;
+                else if (type.equals("Straight Flush")) rank = 9;
+                else if (type.equals("Four of a Kind")) rank = 8;
+                else if (type.equals("Full House")) rank = 7;
+                else if (type.equals("Flush")) rank = 6;
+                else if (type.equals("Straight")) rank = 5;
+                else if (type.equals("Three of a Kind")) rank = 4;
+                else if (type.equals("Two Pair")) rank = 3;
+                else if (type.equals("One Pair")) rank = 2;
+                else rank = 1;
+
+                int high = 0;
+                if (highCard != null) {
+                    high = (int)highCard.getNumericValue();
+                }
+
+                if (rank > bestRank) {
+                    bestRank = rank;
+                    bestHighCard = high;
+                    bestHandType = type;
+                    winners.clear();
+                    winners.add(x);
+                } else if (rank == bestRank) {
+                    if (high > bestHighCard) {
+                        bestHighCard = high;
+                        bestHandType = type;
+                        winners.clear();
+                        winners.add(x);
+                    } else if (high == bestHighCard) {
+                        winners.add(x);
+                    }
+                }
+            }
         }
-        System.out.println("Final community cards: " + communityCards);
-        
-        // Simple random winner selection (replace with actual hand evaluation)
-        Random rand = new Random();
-        Player winner = activePlayers.get(rand.nextInt(activePlayers.size()));
-        
-        System.out.println("\nWinner: " + winner.name + " wins $" + pot + "!");
-        winner.changeMoney(pot);
-        
+
+                int share = pot / winners.size();
+        for (int i = 0; i < winners.size(); i++) {
+            String name = winners.get(i);
+            Player player = players.get(name);
+            player.money = player.money + share;
+        }
+
+        String result = "";
+        for (int i = 0; i < winners.size(); i++) {
+            result += winners.get(i);
+            if (i < winners.size() - 1) {
+                result += ", ";
+            }
+        }
+
+        System.out.println("Winner(s): " + result + " (" + bestHandType + ")");
+
+
+        gameState = GameState.HAND_OVER;
         endHand();
     }
 
-    private void evaluateSidePots(){ //TODO FINish method
+
+    public void evaluateSidePots(){ //TODO FINish method
         if (sidePots.isEmpty()){
         }
 
     }
     
-    private void endHand() {
+    public void endHand() {
         List<Player> activePlayers = getActivePlayers();
         
         // Collect any remaining bets
@@ -482,7 +563,7 @@ public class gameV2 {
         }
     }
     
-    private boolean isGameOver() {
+    public boolean isGameOver() {
         int playersWithMoney = 0;
         for (Player player : players.values()) {
             if (player.money > 0) {
@@ -492,7 +573,7 @@ public class gameV2 {
         return playersWithMoney <= 1;
     }
     
-    private void displayPlayerChips() {
+    public void displayPlayerChips() {
         System.out.println("\n=== CHIP COUNTS ===");
         for (String playerName : turnOrder) {
             Player player = players.get(playerName);
